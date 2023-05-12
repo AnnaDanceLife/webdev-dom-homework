@@ -10,40 +10,7 @@
 <body>
   <div class="container">
     <ul id="comments" class="comments">
-      <li class="comment">
-        <div class="comment-header">
-          <div>Глеб Фокин</div>
-          <div>12.02.22 12:18</div>
-        </div>
-        <div class="comment-body">
-          <div class="comment-text">
-            Это будет первый комментарий на этой странице
-          </div>
-        </div>
-        <div class="comment-footer">
-          <div class="likes">
-            <span class="likes-counter">3</span>
-            <button class="like-button"></button>
-          </div>
-        </div>
-      </li>
-      <li class="comment">
-        <div class="comment-header">
-          <div>Варвара Н.</div>
-          <div>13.02.22 19:22</div>
-        </div>
-        <div class="comment-body">
-          <div class="comment-text">
-            Мне нравится как оформлена эта страница! ❤
-          </div>
-        </div>
-        <div class="comment-footer">
-          <div class="likes">
-            <span class="likes-counter">75</span>
-            <button class="like-button -active-like"></button>
-          </div>
-        </div>
-      </li>
+      <!-- Список рендерится из JS -->
     </ul>
     <div>
       <button id="button-del" class="add-form-button">Удалить последний комментарий</button>
@@ -58,148 +25,243 @@
     </div>
   </div>
 </body>
-<style>
-  .error {
-    background-color: rgb(235, 170, 170);
-  }
-
-  .button-no-active {
-    background-color: #d1d0d0;
-  }
-</style>
 
 <script>
-  "use strict";
-  const buttonElement = document.getElementById("add-form-button");
-  const commentsElement = document.getElementById("comments");
-  const nameInputElement = document.getElementById("add-form-name");
-  const textAreaElement = document.getElementById("add-form-text");
+  'use strict';
+  const buttonElement = document.getElementById('add-form-button');
+  const commentsElement = document.getElementById('comments');
+  const nameInputElement = document.getElementById('add-form-name');
+  const textAreaElement = document.getElementById('add-form-text');
 
-  function fullDate(date) {
-
-    let dd = date.getDate();
-    if (dd < 10) dd = '0' + dd;
-
-    let mm = date.getMonth() + 1;
-    if (mm < 10) mm = '0' + mm;
-
-    let yy = date.getFullYear() % 100;
-    if (yy < 10) yy = '0' + yy;
-
-    let hh = date.getHours();
-    if (hh < 10) hh = '0' + hh;
-
-    let min = date.getMinutes();
-    if (min < 10) min = '0' + min;
-
-    return dd + '.' + mm + '.' + yy + ' ' + hh + ':' + min;
-  }
-  let nowDate = new Date();
-
-  buttonElement.addEventListener("click", () => {
-
-    nameInputElement.classList.remove("error");
-    if (nameInputElement.value === "") {
-      nameInputElement.classList.add("error");
-      return;
+  const comments = [
+    {
+      author: 'Глеб Фокин',
+      date: '12.02.22 12:18',
+      text: 'Это будет первый комментарий на этой странице',
+      likes: 3,
+      isLiked: false,
+      isEdit: false
+    },
+    {
+      author: 'Варвара Н.',
+      date: '13.02.22 19:22',
+      text: 'Мне нравится как оформлена эта страница! ❤',
+      likes: 75,
+      isLiked: false,
+      isEdit: false
     }
+  ];
 
-    textAreaElement.classList.remove("error");
-    if (textAreaElement.value === "") {
-      textAreaElement.classList.add("error");
-      return;
+  const initCountLikesListeners = () => {
+    const countLikesElements = document.querySelectorAll('.like-button');
+
+    for (const countLikesElement of countLikesElements) {
+      countLikesElement.addEventListener('click', (event) => {
+        event.stopPropagation();
+
+        const index = countLikesElement.dataset.index;
+        const comment = comments[index];
+
+        comment.likes = comment.isLiked ? comment.likes - 1 : comment.likes + 1;
+        comment.isLiked = !comment.isLiked;
+
+        renderComments();
+      });
     }
+  };
 
-    const oldComments = commentsElement.innerHTML;
-    commentsElement.innerHTML = oldComments +
-      `<li class="comment">
+  // Дополнительное задание DOM-2 - работа кнопок "Редактировать комментарий"
+
+  const initEditCommentListeners = () => {
+    const editCommentElements = document.querySelectorAll('.edit-comment');
+
+    for (const editCommentElement of editCommentElements) {
+      editCommentElement.addEventListener('click', (event) => {
+        event.stopPropagation();
+
+        const index = editCommentElement.dataset.index;
+        const comment = comments[index];
+
+
+        if (comment.isEdit) {
+          const textArea = document.querySelector('.textarea-text');
+
+          comment.text = textArea.value;
+        }
+
+        comment.isEdit = !comment.isEdit;
+        comments[index].isEdit = comment.isEdit;
+
+        renderComments();
+      });
+    }
+  };
+
+  // Сценарий "Ответ на комментарий"
+
+  const initReplyToCommentListeners = () => {
+    const replyToCommentElements = document.querySelectorAll('.comment-text');
+
+    for (const replyToCommentElement of replyToCommentElements) {
+      replyToCommentElement.addEventListener('click', () => {
+        const index = replyToCommentElement.dataset.index;
+        const comment = comments[index];
+
+        // Строка кода к основному заданию по DOM -3
+        // textAreaElement.value = comment.author +"\r\n" + comment.text;
+
+        textAreaElement.value = `QUOTE_BEGIN ${comment.author + ':' + "\r\n" + comment.text} QUOTE_END`;
+      });
+    };
+  };
+
+  const renderComments = () => {
+    const commentsHtml = comments.
+      map((comment, index) => {
+        return `<li class="comment" data-index="${index}">
         <div class="comment-header">
-          <div>${nameInputElement.value}</div>
-          <div>${fullDate(nowDate)} </div>
-        </div>
-        <div class="comment-body">
-          <div class="comment-text">
-            ${textAreaElement.value}
+          <div>
+            ${comment.author}
+          </div>
+          <div>
+            ${comment.date}
           </div>
         </div>
+        <div class="comment-body">
+            ${comment.isEdit
+            ? `<textarea type="textarea" data-index=${index} class="textarea-text" rows="4">${comment.text}</textarea>`
+            : `<div class="comment-text" data-index="${index}">
+              ${comment.text}
+            </div>`
+          }
+        </div>
         <div class="comment-footer">
+          <div>
+            <button data-index="${index}" class="add-form-button edit-comment">
+              ${comment.isEdit ? 'Сохранить' : 'Редактировать'}
+            </button>
+          </div>
           <div class="likes">
-            <span class="likes-counter">0</span>
-            <button class="like-button"></button>
+            <span class="likes-counter">${comment.likes}</span>
+            <button data-index="${index}" class="like-button ${comment.isLiked ? '-active-like' : ''}">
+            </button>
           </div>
         </div>
       </li>`;
+      })
+      .join('');
 
-    nameInputElement.value = "";
-    textAreaElement.value = "";
+    commentsElement.innerHTML = commentsHtml;
+    initCountLikesListeners();
+    initEditCommentListeners();
+    initReplyToCommentListeners();
+  };
+
+  renderComments();
+
+  const addComment = () => {
+
+    let userDate = new Date();
+
+    let date = userDate.getDate();
+    if (date < 10) date = '0' + date;
+
+    let month = userDate.getMonth() + 1;
+    if (month < 10) month = '0' + month;
+
+    let year = userDate.getFullYear() % 100;
+    if (year < 10) year = '0' + year;
+
+    let hours = userDate.getHours();
+    if (hours < 10) hours = '0' + hours;
+
+    let minutes = userDate.getMinutes();
+    if (minutes < 10) minutes = '0' + minutes;
+
+    let nowDate = `${date}.${month}.${year} ${hours}:${minutes}`;
+
+    comments.push({
+      author: nameInputElement.value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;"),
+      date: nowDate,
+      text: textAreaElement.value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("QUOTE_BEGIN", "<div class='quote'>")
+        .replaceAll("QUOTE_END", "</div>"),
+      likes: 0,
+      isLiked: false,
+      isEdit: false
+    });
+  };
+
+  buttonElement.addEventListener('click', () => {
+
+    nameInputElement.classList.remove('error');
+    textAreaElement.classList.remove('error');
+
+    if (nameInputElement.value.trim() === '') {
+      return nameInputElement.classList.add('error');
+    } else if (textAreaElement.value.trim() === '') {
+      return textAreaElement.classList.add('error');
+    }
+
+    addComment();
+    renderComments();
+
+    nameInputElement.value = '';
+    textAreaElement.value = '';
+
   });
 
-
-  // Дополнительные задания
-
-  // Расширенная валидация
+  // Выключение кнопки при пустом поле ввода
 
   function onblur(e) {
-    if (nameInputElement.value === "") {
+    if (nameInputElement.value === '' || textAreaElement.value === '') {
       buttonElement.disabled = true;
-      buttonElement.classList.add("button-no-active");
+      buttonElement.classList.add('button-no-active');
     } else {
       buttonElement.disabled = false;
-      buttonElement.classList.remove("button-no-active");
+      buttonElement.classList.remove('button-no-active');
     }
-
   };
-  nameInputElement.addEventListener("blur", onblur);
-
-  function onblur(e) {
-    if (textAreaElement.value === "") {
-      buttonElement.disabled = true;
-      buttonElement.classList.add("button-no-active");
-    } else {
-      buttonElement.disabled = false;
-      buttonElement.classList.remove("button-no-active");
-    }
-
-  };
-  textAreaElement.addEventListener("blur", onblur);
+  nameInputElement.addEventListener('input', onblur);
+  textAreaElement.addEventListener('input', onblur);
 
 
   // Добавление элемента в список по нажатию Enter
 
-  document.addEventListener("keyup", function (event) {
+  const formElement = document.getElementById('form');
+
+  formElement.addEventListener('keyup', function (event) {
+
     if (event.keyCode === 13) {
-      const oldComments = commentsElement.innerHTML;
-      commentsElement.innerHTML = oldComments +
-        `<li class="comment">
-        <div class="comment-header">
-          <div>${nameInputElement.value}</div>
-          <div>${fullDate(nowDate)} </div>
-        </div>
-        <div class="comment-body">
-          <div class="comment-text">
-            ${textAreaElement.value}
-          </div>
-        </div>
-        <div class="comment-footer">
-          <div class="likes">
-            <span class="likes-counter">0</span>
-            <button class="like-button"></button>
-          </div>
-        </div>
-      </li>`;
-      nameInputElement.value = "";
-      textAreaElement.value = "";
+      addComment();
+      nameInputElement.value = '';
+      textAreaElement.value = '';
     }
-  })
+
+    renderComments();
+  });
 
 
   // Удаление последнего элемента
 
-  const buttonDelElement = document.getElementById("button-del");
+  const buttonDelElement = document.getElementById('button-del');
 
   buttonDelElement.addEventListener('click', () => {
-    const allComments = document.querySelectorAll('li');
-    allComments[allComments.length - 1].remove();
+    const commentsElements = document.querySelectorAll('li');
+    const index = commentsElement.dataset.index;
+    const comment = comments[index];
+    comments.pop();
+    renderComments();
   });
+
 </script>
+
 </html>

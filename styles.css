@@ -52,16 +52,28 @@ body {
 
   .comment-footer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
   }
 
   .comment-body {
     margin-top: 32px;
     margin-bottom: 32px;
+    white-space: pre-line;
   }
 
-  .comment-text {
+  .comment-text,
+  .textarea-text {
     font-size: 32px;
+  }
+
+  .quote {
+    font-size: 16px;
+    font-family: Helvetica;
+    color: #000000;
+    border: none;
+    background-color: white;
+    padding: 11px;
+    margin-bottom: 30px;
   }
 
   .likes {
@@ -134,4 +146,12 @@ body {
 
   .add-form-button:hover {
     opacity: 0.9;
+  }
+
+  .error {
+    background-color: #abea34;
+  }
+
+  .button-no-active {
+    background-color: #d1d0d0;
   }
