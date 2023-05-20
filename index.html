@@ -254,24 +254,40 @@
         isLiked: false,
         // isEdit: false
       })
-    });
+    }).then((response) => {
+      response.json().then((responseData) => {
+        fetch('https://webdev-hw-api.vercel.app/api/v1/anna-shatilova/comments', {
+          method: "GET"
+        }).then((response) => {
+          response.json().then((responseData) => {
+            const appComments = responseData.comments.map((comment) => {
+              return {
+                author: comment.author.name,
+                date: fullDate(comment.date),
+                text: comment.text,
+                likes: comment.likes,
+                isLiked: false,
+              }
+            });
+            comments = appComments;
+            renderComments();
+          });
+        });
 
-    // .then((response) => {
-    //   response.json().then((responseData) => {
-    //     const appComments = responseData.comments.map((comment) => {
-    //       return {
-    //         author: comment.author.name,
-    //         date: comment.date,
-    //         text: comment.text,
-    //         likes: comment.likes,
-    //         isLiked: false,
-    //       }
-    //     });
-    //     comments = appComments;
-    //     fullDate();
-    //     renderComments();
-    //   });
-    // });
+        // const appComments = responseData.comments.map((comment) => {
+        //   return {
+        //     author: comment.author.name,
+        //     date: comment.date,
+        //     text: comment.text,
+        //     likes: comment.likes,
+        //     isLiked: false,
+        // }
+        // });
+        // comments = appComments;
+        // fullDate();
+        // renderComments();
+      });
+    });
 
     nameInputElement.value = '';
     textAreaElement.value = '';
