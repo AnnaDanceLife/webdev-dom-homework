@@ -245,7 +245,6 @@
           .replaceAll("<", "&lt;")
           .replaceAll(">", "&gt;")
           .replaceAll('"', "&quot;"),
-        date: new Date(),
         text: textAreaElement.value
           .replaceAll("&", "&amp;")
           .replaceAll("<", "&lt;")
@@ -253,19 +252,15 @@
           .replaceAll('"', "&quot;")
           .replaceAll("QUOTE_BEGIN", "<div class='quote'>")
           .replaceAll("QUOTE_END", "</div>"),
-        likes: 0,
-        isLiked: false,
-        // isEdit: false
       })
     })
       .then((response) => {
         return response.json()
       })
       .then(() => {
-        return fetchAndRenderComments();
+        return fetchAndRenderComments()
       })
 
-    renderComments();
     nameInputElement.value = '';
     textAreaElement.value = '';
 
