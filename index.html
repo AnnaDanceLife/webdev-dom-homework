@@ -235,13 +235,11 @@
     fetch('https://webdev-hw-api.vercel.app/api/v1/anna-shatilova/comments', {
       method: "POST",
       body: JSON.stringify({
-        author: {
-          name: nameInputElement.value
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll('"', "&quot;")
-        },
+        name: nameInputElement.value
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;"),
         date: new Date(),
         text: textAreaElement.value
           .replaceAll("&", "&amp;")
@@ -273,19 +271,6 @@
             renderComments();
           });
         });
-
-        // const appComments = responseData.comments.map((comment) => {
-        //   return {
-        //     author: comment.author.name,
-        //     date: comment.date,
-        //     text: comment.text,
-        //     likes: comment.likes,
-        //     isLiked: false,
-        // }
-        // });
-        // comments = appComments;
-        // fullDate();
-        // renderComments();
       });
     });
 
