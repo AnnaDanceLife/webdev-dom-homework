@@ -242,8 +242,8 @@
       return textAreaElement.classList.add('error');
     }
 
-    buttonElement.disabled = true;
-    buttonElement.textContent = 'Комментарий добавляется...';
+    formElement.disabled = true;
+    formElement.textContent = 'Комментарий добавляется...';
 
     fetch('https://webdev-hw-api.vercel.app/api/v1/anna-shatilova/comments', {
       method: "POST",
@@ -267,8 +267,12 @@
       })
       .then(() => {
         return fetchAndRenderComments().then(() => {
-          buttonElement.disabled = false;
-          buttonElement.textContent = 'Написать';
+          formElement.disabled = false;
+          formElement.innerHTML = `<input id="add-form-name" type="text" class="add-form-name" placeholder="Введите ваше имя" />
+      <textarea id="add-form-text" type="textarea" class="add-form-text" placeholder="Введите ваш коментарий" rows="4"></textarea>
+      <div class="add-form-row">
+        <button id="add-form-button" class="add-form-button">Написать</button>
+      </div>`;
         })
       })
 
