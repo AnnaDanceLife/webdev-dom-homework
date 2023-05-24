@@ -15,14 +15,15 @@
     <div>
       <button id="button-del" class="add-form-button">Удалить последний комментарий</button>
     </div>
-    <div id="form" class="add-form">
-      <input id="add-form-name" type="text" class="add-form-name" placeholder="Введите ваше имя" />
+    <!-- <div id="form" class="add-form">
+      <input
+        id="add-form-name" type="text" class="add-form-name" placeholder="Введите ваше имя" />
       <textarea id="add-form-text" type="textarea" class="add-form-text" placeholder="Введите ваш коментарий"
         rows="4"></textarea>
       <div class="add-form-row">
         <button id="add-form-button" class="add-form-button">Написать</button>
       </div>
-    </div>
+    </div> -->
   </div>
 </body>
 
@@ -32,6 +33,7 @@
   const commentsElement = document.getElementById('comments');
   const nameInputElement = document.getElementById('add-form-name');
   const textAreaElement = document.getElementById('add-form-text');
+  const formElement = document.getElementById('form');
 
   let comments = [
     // {
@@ -69,6 +71,7 @@
         const index = countLikesElement.dataset.index;
         const comment = comments[index];
         comment.isLikeLoading = true;
+        renderComments();
 
         delay(2000).then(() => {
           comment.likes = comment.isLiked
@@ -172,6 +175,20 @@
 
   renderComments();
 
+  const renderForm = () => {
+    return `<div id="form" class="add-form">
+      $ {formElement.isLoading 
+      ? `Комментарий добавляется...` 
+      : `< input id = "add-form-name" type = "text" class="add-form-name" placeholder = "Введите ваше имя" />
+      <textarea id="add-form-text" type="textarea" class="add-form-text" placeholder="Введите ваш коментарий" rows="4"></textarea>
+      <div class="add-form-row">
+        <button id="add-form-button" class="add-form-button">Написать</button>
+      </div>`}
+    </div>`;
+  }
+
+  renderForm();
+
   const fullDate = () => {
 
     let userDate = new Date();
@@ -243,6 +260,7 @@
 
   fetchAndRenderComments();
 
+
   buttonElement.addEventListener('click', () => {
 
     nameInputElement.classList.remove('error');
@@ -254,8 +272,7 @@
       return textAreaElement.classList.add('error');
     }
 
-    formElement.disabled = true;
-    formElement.textContent = 'Комментарий добавляется...';
+    formElement.isLoading = true;
 
     fetch('https://webdev-hw-api.vercel.app/api/v1/anna-shatilova/comments', {
       method: "POST",
@@ -279,15 +296,10 @@
       })
       .then(() => {
         return fetchAndRenderComments().then(() => {
-          formElement.disabled = false;
-          formElement.innerHTML = `<input id="add-form-name" type="text" class="add-form-name" placeholder="Введите ваше имя" />
-      <textarea id="add-form-text" type="textarea" class="add-form-text" placeholder="Введите ваш коментарий" rows="4"></textarea>
-      <div class="add-form-row">
-        <button id="add-form-button" class="add-form-button">Написать</button>
-      </div>`;
+          formElement.isLoading = false;
         })
       })
-
+    renderForm();
     nameInputElement.value = '';
     textAreaElement.value = '';
 
@@ -310,12 +322,10 @@
 
   // Добавление элемента в список по нажатию Enter
 
-  const formElement = document.getElementById('form');
-
   formElement.addEventListener('keyup', function (event) {
 
     if (event.keyCode === 13) {
-      addComment();
+      fetchAndRenderComments();
       nameInputElement.value = '';
       textAreaElement.value = '';
     }
