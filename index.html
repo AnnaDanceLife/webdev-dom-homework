@@ -176,16 +176,17 @@
   renderComments();
 
   const renderForm = () => {
-    return `<div id="form" class="add-form">
+    const formElementHtml = `<div id="form" class="add-form">
       $ {formElement.isLoading 
-      ? `Комментарий добавляется...` 
-      : `< input id = "add-form-name" type = "text" class="add-form-name" placeholder = "Введите ваше имя" />
+      ? 'Комментарий добавляется...' 
+      : '< input id = "add-form-name" type = "text" class="add-form-name" placeholder = "Введите ваше имя" />
       <textarea id="add-form-text" type="textarea" class="add-form-text" placeholder="Введите ваш коментарий" rows="4"></textarea>
       <div class="add-form-row">
         <button id="add-form-button" class="add-form-button">Написать</button>
-      </div>`}
+      </div>'}
     </div>`;
-  }
+    formElement.innerHTML = formElementHtml;
+  };
 
   renderForm();
 
@@ -299,7 +300,6 @@
           formElement.isLoading = false;
         })
       })
-    renderForm();
     nameInputElement.value = '';
     textAreaElement.value = '';
 
