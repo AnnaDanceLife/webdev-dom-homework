@@ -23,6 +23,7 @@
         <button id="add-form-button" class="add-form-button">Написать</button>
       </div>
     </div>
+    <p class="add-comment" style="display: none;">Комментарий добавляется...</p>
   </div>
 </body>
 
@@ -32,24 +33,26 @@
   const commentsElement = document.getElementById('comments');
   const nameInputElement = document.getElementById('add-form-name');
   const textAreaElement = document.getElementById('add-form-text');
+  const formElement = document.getElementById('form');
+  const addComment = document.querySelector('.add-comment');
 
-  const comments = [
-    {
-      author: 'Глеб Фокин',
-      date: '12.02.22 12:18',
-      text: 'Это будет первый комментарий на этой странице',
-      likes: 3,
-      isLiked: false,
-      isEdit: false
-    },
-    {
-      author: 'Варвара Н.',
-      date: '13.02.22 19:22',
-      text: 'Мне нравится как оформлена эта страница! ❤',
-      likes: 75,
-      isLiked: false,
-      isEdit: false
-    }
+  let comments = [
+    // {
+    //   author: 'Глеб Фокин',
+    //   date: '12.02.22 12:18',
+    //   text: 'Это будет первый комментарий на этой странице',
+    //   likes: 3,
+    //   isLiked: false,
+    //   isEdit: false
+    // },
+    // {
+    //   author: 'Варвара Н.',
+    //   date: '13.02.22 19:22',
+    //   text: 'Мне нравится как оформлена эта страница! ❤',
+    //   likes: 75,
+    //   isLiked: false,
+    //   isEdit: false
+    // }
   ];
 
   const initCountLikesListeners = () => {
@@ -57,17 +60,30 @@
 
     for (const countLikesElement of countLikesElements) {
       countLikesElement.addEventListener('click', (event) => {
+        function delay(interval = 300) {
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve();
+            }, interval);
+          });
+        };
         event.stopPropagation();
 
         const index = countLikesElement.dataset.index;
         const comment = comments[index];
-
-        comment.likes = comment.isLiked ? comment.likes - 1 : comment.likes + 1;
-        comment.isLiked = !comment.isLiked;
-
+        comment.isLikeLoading = true;
         renderComments();
-      });
-    }
+
+        delay(2000).then(() => {
+          comment.likes = comment.isLiked
+            ? comment.likes - 1
+            : comment.likes + 1;
+          comment.isLiked = !comment.isLiked;
+          comment.isLikeLoading = false;
+          renderComments();
+        });
+      })
+    };
   };
 
   // Дополнительное задание DOM-2 - работа кнопок "Редактировать комментарий"
@@ -115,6 +131,7 @@
     };
   };
 
+
   const renderComments = () => {
     const commentsHtml = comments.
       map((comment, index) => {
@@ -143,7 +160,7 @@
           </div>
           <div class="likes">
             <span class="likes-counter">${comment.likes}</span>
-            <button data-index="${index}" class="like-button ${comment.isLiked ? '-active-like' : ''}">
+            <button data-index="${index}" class="like-button ${comment.isLiked ? '-active-like' : ''} ${comment.isLikeLoading ? '-loading-like' : ''}">
             </button>
           </div>
         </div>
@@ -159,7 +176,7 @@
 
   renderComments();
 
-  const addComment = () => {
+  const fullDate = () => {
 
     let userDate = new Date();
 
@@ -178,27 +195,58 @@
     let minutes = userDate.getMinutes();
     if (minutes < 10) minutes = '0' + minutes;
 
-    let nowDate = `${date}.${month}.${year} ${hours}:${minutes}`;
-
-    comments.push({
-      author: nameInputElement.value
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;"),
-      date: nowDate,
-      text: textAreaElement.value
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("QUOTE_BEGIN", "<div class='quote'>")
-        .replaceAll("QUOTE_END", "</div>"),
-      likes: 0,
-      isLiked: false,
-      isEdit: false
-    });
+    return `${date}.${month}.${year} ${hours}:${minutes}`;
   };
+
+
+  // comments.push({
+  //   author: nameInputElement.value
+  //     .replaceAll("&", "&amp;")
+  //     .replaceAll("<", "&lt;")
+  //     .replaceAll(">", "&gt;")
+  //     .replaceAll('"', "&quot;"),
+  //   date: nowDate,
+  //   text: textAreaElement.value
+  //     .replaceAll("&", "&amp;")
+  //     .replaceAll("<", "&lt;")
+  //     .replaceAll(">", "&gt;")
+  //     .replaceAll('"', "&quot;")
+  //     .replaceAll("QUOTE_BEGIN", "<div class='quote'>")
+  //     .replaceAll("QUOTE_END", "</div>"),
+  //   likes: 0,
+  //   isLiked: false,
+  //   isEdit: false
+  // });
+
+  commentsElement.disabled = true;
+  commentsElement.textContent = 'Комментарии загружаются';
+
+  const fetchAndRenderComments = () => {
+    return fetch('https://webdev-hw-api.vercel.app/api/v1/anna-shatilova/comments', {
+      method: "GET"
+    })
+      .then((response) => {
+        return response.json()
+      })
+      .then((responseData) => {
+        commentsElement.disabled = true;
+        commentsElement.textContent = comments;
+        const appComments = responseData.comments.map((comment) => {
+          return {
+            author: comment.author.name,
+            date: fullDate(comment.date),
+            text: comment.text,
+            likes: comment.likes,
+            isLiked: false,
+          }
+        });
+        comments = appComments;
+        renderComments();
+      })
+  }
+
+  fetchAndRenderComments();
+
 
   buttonElement.addEventListener('click', () => {
 
@@ -211,9 +259,35 @@
       return textAreaElement.classList.add('error');
     }
 
-    addComment();
-    renderComments();
+    formElement.style.display = 'none';
+    addComment.style.display = 'block';
 
+    fetch('https://webdev-hw-api.vercel.app/api/v1/anna-shatilova/comments', {
+      method: "POST",
+      body: JSON.stringify({
+        name: nameInputElement.value
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;"),
+        text: textAreaElement.value
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("QUOTE_BEGIN", "<div class='quote'>")
+          .replaceAll("QUOTE_END", "</div>"),
+      })
+    })
+      .then((response) => {
+        return response.json()
+      })
+      .then(() => {
+        return fetchAndRenderComments().then(() => {
+          addComment.style.display = 'none';
+          formElement.style.display = 'block';
+        })
+      })
     nameInputElement.value = '';
     textAreaElement.value = '';
 
@@ -236,12 +310,10 @@
 
   // Добавление элемента в список по нажатию Enter
 
-  const formElement = document.getElementById('form');
-
   formElement.addEventListener('keyup', function (event) {
 
     if (event.keyCode === 13) {
-      addComment();
+      fetchAndRenderComments();
       nameInputElement.value = '';
       textAreaElement.value = '';
     }
