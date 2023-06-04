@@ -1,7 +1,14 @@
-export const renderComments = (element) => {
+import { comments } from "./api.js";
+import { initReplyToCommentListeners } from "./main.js";
+import { initEditCommentListeners } from "./main.js";
+import { initCountLikesListeners } from "./main.js";
+const commentsElement = document.getElementById('comments');
+
+
+export const renderComments = () => {
     const commentsHtml = comments.
-      map((comment, index) => {
-        return `<li class="comment" data-index="${index}">
+        map((comment, index) => {
+            return `<li class="comment" data-index="${index}">
         <div class="comment-header">
           <div>
             ${comment.author}
@@ -12,11 +19,11 @@ export const renderComments = (element) => {
         </div>
         <div class="comment-body">
             ${comment.isEdit
-            ? `<textarea type="textarea" data-index=${index} class="textarea-text" rows="4">${comment.text}</textarea>`
-            : `<div class="comment-text" data-index="${index}">
+                    ? `<textarea type="textarea" data-index=${index} class="textarea-text" rows="4">${comment.text}</textarea>`
+                    : `<div class="comment-text" data-index="${index}">
               ${comment.text}
             </div>`
-          }
+                }
         </div>
         <div class="comment-footer">
           <div>
@@ -31,11 +38,11 @@ export const renderComments = (element) => {
           </div>
         </div>
       </li>`;
-      })
-      .join('');
+        })
+        .join('');
 
-    element.innerHTML = commentsHtml;
+    commentsElement.innerHTML = commentsHtml;
     initCountLikesListeners();
     initEditCommentListeners();
     initReplyToCommentListeners();
-  };
+};
