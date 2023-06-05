@@ -2,7 +2,10 @@ const nameInputElement = document.getElementById('add-form-name');
 const textAreaElement = document.getElementById('add-form-text');
 const formElement = document.getElementById('form');
 const addComment = document.querySelector('.add-comment');
+const commentsElement = document.getElementById('comments');
+
 import { renderComments } from "./render.js";
+import { fullDate } from "./main.js";
 export let comments = [];
 
 export const fetchAndRenderComments = () => {
@@ -83,6 +86,7 @@ export const handlePostClick = () => {
 
             if (error.message === "Сервер сломался") {
                 handlePostClick();
+                return;
             }
             if (error.message === "Плохой запрос") {
                 alert("Имя и комментарий должны быть не короче 3 символов");
