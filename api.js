@@ -8,8 +8,27 @@ import { renderComments } from "./render.js";
 import { fullDate } from "./main.js";
 export let comments = [];
 
+const host = 'https://wedev-api.sky.pro/api/v2/anna-shatilova/comments';
+const loginHost = ' https://wedev-api.sky.pro/api/user/login';
+
+export const fetchLogin = () => {
+    return fetch(loginHost, {
+        method: "POST",
+        body: JSON.stringify({
+            login,
+            password
+        })
+    })
+        .then((response) => {
+            if (response.status === 400) {
+                throw new Error("Передан неверный логин или пароль");
+            }
+            return response.json()
+        })
+}
+
 export const fetchAndRenderComments = () => {
-    return fetch('https://webdev-hw-api.vercel.app/api/v1/anna-shatilova/comments', {
+    return fetch(host, {
         method: "GET"
     })
         .then((response) => {
@@ -42,15 +61,10 @@ export const fetchAndRenderComments = () => {
         })
 }
 
-export const handlePostClick = () => {
-    fetch('https://webdev-hw-api.vercel.app/api/v1/anna-shatilova/comments', {
+export const handlePostClick = (textAreaElement, token) => {
+    fetch(host, {
         method: "POST",
         body: JSON.stringify({
-            name: nameInputElement.value
-                .replaceAll("&", "&amp;")
-                .replaceAll("<", "&lt;")
-                .replaceAll(">", "&gt;")
-                .replaceAll('"', "&quot;"),
             text: textAreaElement.value
                 .replaceAll("&", "&amp;")
                 .replaceAll("<", "&lt;")
@@ -59,40 +73,43 @@ export const handlePostClick = () => {
                 .replaceAll("QUOTE_BEGIN", "<div class='quote'>")
                 .replaceAll("QUOTE_END", "</div>"),
             forceError: true
-        })
+        }),
+        headers: {
+            Authorization: `Bearer ${ token }`
+        }
     })
         .then((response) => {
-            if (response.status === 500) {
-                throw new Error("Сервер сломался");
-            }
+                if (response.status === 500) {
+                    throw new Error("Сервер сломался");
+                }
 
-            if (response.status === 400) {
-                throw new Error("Плохой запрос");
-            }
+                if (response.status === 400) {
+                    throw new Error("Плохой запрос");
+                }
 
-            return response.json()
-        })
-        .then(() => {
-            return fetchAndRenderComments().then(() => {
-                addComment.style.display = 'none';
-                formElement.style.display = 'block';
-                nameInputElement.value = '';
-                textAreaElement.value = '';
+                return response.json()
             })
-        })
-        .catch((error) => {
-            formElement.style.display = 'block';
+    .then(() => {
+        return fetchAndRenderComments().then(() => {
             addComment.style.display = 'none';
-
-            if (error.message === "Сервер сломался") {
-                handlePostClick();
-                return;
-            }
-            if (error.message === "Плохой запрос") {
-                alert("Имя и комментарий должны быть не короче 3 символов");
-                return;
-            }
-            alert('Кажется, у вас отсутствует интернет');
-            console.log(error);
+            formElement.style.display = 'block';
+            nameInputElement.value = '';
+            textAreaElement.value = '';
         })
+    })
+    .catch((error) => {
+        formElement.style.display = 'block';
+        addComment.style.display = 'none';
+
+        if (error.message === "Сервер сломался") {
+            handlePostClick();
+            return;
+        }
+        if (error.message === "Плохой запрос") {
+            alert("Имя и комментарий должны быть не короче 3 символов");
+            return;
+        }
+        alert('Кажется, у вас отсутствует интернет');
+        console.log(error);
+    })
 }

@@ -1,17 +1,13 @@
 'use strict';
-const buttonElement = document.getElementById('add-form-button');
-const nameInputElement = document.getElementById('add-form-name');
-const textAreaElement = document.getElementById('add-form-text');
+// const nameInputElement = document.getElementById('add-form-name');
+// const textAreaElement = document.getElementById('add-form-text');
 const formElement = document.getElementById('form');
 const addComment = document.querySelector('.add-comment');
 const commentsElement = document.getElementById('comments');
 
+
 import { comments } from "./api.js";
 import { renderComments } from "./render.js";
-
-commentsElement.disabled = true;
-commentsElement.textContent = 'Комментарии загружаются';
-
 import { fetchAndRenderComments, handlePostClick } from "./api.js";
 
 
@@ -113,27 +109,27 @@ export const fullDate = () => {
     return `${date}.${month}.${year} ${hours}:${minutes}`;
 };
 
-// renderComments();
+renderComments(app);
 fetchAndRenderComments();
 initCountLikesListeners();
 initEditCommentListeners();
 initReplyToCommentListeners();
 
-buttonElement.addEventListener('click', () => {
+// buttonElement.addEventListener('click', () => {
 
-    nameInputElement.classList.remove('error');
-    textAreaElement.classList.remove('error');
+//     nameInputElement.classList.remove('error');
+//     textAreaElement.classList.remove('error');
 
-    if (nameInputElement.value.trim() === '') {
-        return nameInputElement.classList.add('error');
-    } else if (textAreaElement.value.trim() === '') {
-        return textAreaElement.classList.add('error');
-    }
+//     if (nameInputElement.value.trim() === '') {
+//         return nameInputElement.classList.add('error');
+//     } else if (textAreaElement.value.trim() === '') {
+//         return textAreaElement.classList.add('error');
+//     }
 
-    formElement.style.display = 'none';
-    addComment.style.display = 'block';
-    handlePostClick();
-});
+//     formElement.style.display = 'none';
+//     addComment.style.display = 'block';
+//     handlePostClick();
+// });
 
 // Выключение кнопки при пустом поле ввода
 
@@ -146,31 +142,31 @@ function onblur(e) {
         buttonElement.classList.remove('button-no-active');
     }
 };
-nameInputElement.addEventListener('input', onblur);
-textAreaElement.addEventListener('input', onblur);
+// nameInputElement.addEventListener('input', onblur);
+// textAreaElement.addEventListener('input', onblur);
 
 
 // Добавление элемента в список по нажатию Enter 
 
-formElement.addEventListener('keyup', function (event) {
+// formElement.addEventListener('keyup', function (event) {
 
-    if (event.keyCode === 13) {
-        fetchAndRenderComments();
-        nameInputElement.value = '';
-        textAreaElement.value = '';
-    }
+//     if (event.keyCode === 13) {
+//         fetchAndRenderComments();
+//         nameInputElement.value = '';
+//         textAreaElement.value = '';
+//     }
 
-    renderComments();
-});
+//     renderComments();
+// });
 
 
 // Удаление последнего элемента
 
-const buttonDelElement = document.getElementById('button-del');
+// const buttonDelElement = document.getElementById('button-del');
 
-buttonDelElement.addEventListener('click', () => {
-    const index = commentsElement.dataset.index;
-    const comment = comments[index];
-    comments.pop();
-    renderComments();
-});
+// buttonDelElement.addEventListener('click', () => {
+//     const index = commentsElement.dataset.index;
+//     const comment = comments[index];
+//     comments.pop();
+//     renderComments();
+// });
