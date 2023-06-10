@@ -9,23 +9,7 @@ import { fullDate } from "./main.js";
 export let comments = [];
 
 const host = 'https://wedev-api.sky.pro/api/v2/anna-shatilova/comments';
-const loginHost = ' https://wedev-api.sky.pro/api/user/login';
-
-export const fetchLogin = () => {
-    return fetch(loginHost, {
-        method: "POST",
-        body: JSON.stringify({
-            login,
-            password
-        })
-    })
-        .then((response) => {
-            if (response.status === 400) {
-                throw new Error("Передан неверный логин или пароль");
-            }
-            return response.json()
-        })
-}
+const loginHost = 'https://wedev-api.sky.pro/api/user/login';
 
 export const fetchAndRenderComments = () => {
     return fetch(host, {
@@ -58,6 +42,22 @@ export const fetchAndRenderComments = () => {
                 alert("Кажется, у вас сломался интернет, попробуйте позже");
                 return;
             }
+        })
+}
+
+export const fetchLogin = () => {
+    return fetch(loginHost, {
+        method: "POST",
+        body: JSON.stringify({
+            login,
+            password
+        })
+    })
+        .then((response) => {
+            if (response.status === 400) {
+                throw new Error("Передан неверный логин или пароль");
+            }
+            return response.json()
         })
 }
 

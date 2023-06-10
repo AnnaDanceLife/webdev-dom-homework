@@ -5,17 +5,15 @@ import { initEditCommentListeners } from "./main.js";
 import { initCountLikesListeners } from "./main.js";
 import { handlePostClick } from "./api.js";
 
-const app = document.getElementById('app');
-const goToLogin = document.getElementById('go-to-login');
-
 
 export const renderComments = (isInitionalLoading, user) => {
+  const app = document.getElementById('app');
   const commentsHtml = comments.
     map((comment, index) => {
       return `<li class="comment" data-index="${index}">
       <div class="comment-header">
         <div>
-          ${comment.author}
+          ${comment.author.name}
         </div>
         <div>
           ${comment.date}
@@ -49,7 +47,7 @@ export const renderComments = (isInitionalLoading, user) => {
   <div class="container">
       <ul id="comments" class="comments">
         ${isInitionalLoading
-      ? "<div class='loading'>Комментарии загружаются...</div>"
+      ? '<div class="loading">Комментарии загружаются...</div>'
       : commentsHtml
     }
       </ul>
@@ -70,7 +68,9 @@ export const renderComments = (isInitionalLoading, user) => {
     }
 </div>`
 
-  app.innerHtml = appHtml;
+  app.innerHTML = appHtml;
+  const goToLogin = document.getElementById('go-to-login');
+
   if (!user) {
     goToLogin.addEventListener('click', (event) => {
       event.preventDefault();
@@ -80,6 +80,7 @@ export const renderComments = (isInitionalLoading, user) => {
 
   if (user) {
     const buttonElement = document.getElementById('add-form-button');
+
     buttonElement.addEventListener('click', () => {
       const textAreaElement = document.getElementById('add-form-text');
       textAreaElement.classList.remove('error');
@@ -90,7 +91,7 @@ export const renderComments = (isInitionalLoading, user) => {
         handlePostClick().then((response) => {
           renderComments(response.user)
         });
-      }     
+      }
     });
   }
 

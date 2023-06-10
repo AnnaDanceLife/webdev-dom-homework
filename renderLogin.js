@@ -2,7 +2,6 @@ import { fetchLogin } from "./api.js";
 import { renderComments } from "./render.js";
 const app = document.getElementById('app');
 
-
 export const renderLogin = () => {
     app.innerHtml = `
     <div class="container">
@@ -15,8 +14,8 @@ export const renderLogin = () => {
         </div>
      </div>
 `;
+const authButton = document.getElementById('auth-button');
 
-    const authButton = document.getElementById('auth-button');
     authButton.addEventListener('click', () => {
         const login = document.getElementById('login').value;
         const password = document.getElementById('password').value;
