@@ -1,7 +1,7 @@
 'use strict';
 
 import { comments } from "./api.js";
-import { renderComments } from "./render.js";
+import { renderApp } from "./render.js";
 
 
 import { fetchAndRenderComments } from "./api.js";
@@ -24,7 +24,7 @@ export const initCountLikesListeners = () => {
             const index = countLikesElement.dataset.index;
             const comment = comments[index];
             comment.isLikeLoading = true;
-            renderComments();
+            renderApp();
 
             delay(2000).then(() => {
                 comment.likes = comment.isLiked
@@ -32,7 +32,7 @@ export const initCountLikesListeners = () => {
                     : comment.likes + 1;
                 comment.isLiked = !comment.isLiked;
                 comment.isLikeLoading = false;
-                renderComments();
+                renderApp();
             });
         })
     };
@@ -60,7 +60,7 @@ export const initEditCommentListeners = () => {
             comment.isEdit = !comment.isEdit;
             comments[index].isEdit = comment.isEdit;
 
-            renderComments();
+            renderApp();
         });
     }
 };
@@ -105,7 +105,6 @@ export const fullDate = () => {
     return `${date}.${month}.${year} ${hours}:${minutes}`;
 };
 
-// renderComments();
 fetchAndRenderComments();
 initCountLikesListeners();
 initEditCommentListeners();

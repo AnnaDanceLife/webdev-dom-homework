@@ -4,7 +4,7 @@ import { initEditCommentListeners } from "./main.js";
 import { initCountLikesListeners } from "./main.js";
 import { handlePostClick } from "./api.js";
 
-export const renderComments = () => {
+export const renderApp = () => {
   const appEl = document.getElementById('app');
 
   const commentsHtml = comments.
@@ -96,15 +96,15 @@ export const renderComments = () => {
 
   // Выключение кнопки при пустом поле ввода
 
-function onblur(e) {
-  if (nameInputElement.value === '' || textAreaElement.value === '') {
+  function onblur(e) {
+    if (nameInputElement.value === '' || textAreaElement.value === '') {
       buttonElement.disabled = true;
       buttonElement.classList.add('button-no-active');
-  } else {
+    } else {
       buttonElement.disabled = false;
       buttonElement.classList.remove('button-no-active');
-  }
-};
+    }
+  };
 
   nameInputElement.addEventListener('input', onblur);
   textAreaElement.addEventListener('input', onblur);
@@ -119,7 +119,7 @@ function onblur(e) {
   //     textAreaElement.value = '';
   //   }
 
-  //   renderComments();
+  //   renderApp();
   // });
 
   // Удаление последнего элемента
@@ -132,7 +132,7 @@ function onblur(e) {
     const index = commentsElement.dataset.index;
     const comment = comments[index];
     comments.pop();
-    renderComments();
+    renderApp();
   });
 
 

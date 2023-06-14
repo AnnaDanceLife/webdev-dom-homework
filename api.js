@@ -1,6 +1,6 @@
 const commentsElement = document.getElementById('comments');
 
-import { renderComments } from "./render.js";
+import { renderApp } from "./render.js";
 import { fullDate } from "./main.js";
 export let comments = [];
 
@@ -42,7 +42,7 @@ export const fetchAndRenderComments = () => {
                 }
             });
             comments = appComments;
-            renderComments();
+            renderApp();
         })
         .catch((error) => {
             if (error.message === "Сервер сломался") {
@@ -57,7 +57,7 @@ export const handlePostClick = () => {
     const textAreaElement = document.getElementById('add-form-text');
     const formElement = document.getElementById('form');
     const addComment = document.querySelector('.add-comment');
-    
+
     fetch(host, {
         method: "POST",
         body: JSON.stringify({
