@@ -9,13 +9,21 @@ import { fullDate } from "./main.js";
 export let comments = [];
 
 const host = 'https://wedev-api.sky.pro/api/v2/anna-shatilova/comments';
-const loginHost = 'https://wedev-api.sky.pro/api/user/login';
+let token = "Bearer asb4c4boc86gasb4c4boc86g37w3cc3bo3b83k4g37k3bk3cg3c03ck4k";
 
 export const fetchAndRenderComments = () => {
     return fetch(host, {
-        method: "GET"
+        method: "GET",
+        headers: {
+            Authorization: token,
+        }
     })
         .then((response) => {
+
+            if (response.status === 401) {
+                throw new Error("Нет авторизации");
+            }
+
             if (response.status === 500) {
                 throw new Error("Сервер сломался");
             }
@@ -45,26 +53,15 @@ export const fetchAndRenderComments = () => {
         })
 }
 
-export const fetchLogin = () => {
-    return fetch(loginHost, {
-        method: "POST",
-        body: JSON.stringify({
-            login,
-            password
-        })
-    })
-        .then((response) => {
-            if (response.status === 400) {
-                throw new Error("Передан неверный логин или пароль");
-            }
-            return response.json()
-        })
-}
-
-export const handlePostClick = (textAreaElement, token) => {
+export const handlePostClick = () => {
     fetch(host, {
         method: "POST",
         body: JSON.stringify({
+            name: nameInputElement.value
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;"),
             text: textAreaElement.value
                 .replaceAll("&", "&amp;")
                 .replaceAll("<", "&lt;")
@@ -75,41 +72,41 @@ export const handlePostClick = (textAreaElement, token) => {
             forceError: true
         }),
         headers: {
-            Authorization: `Bearer ${ token }`
+            Authorization: token,
         }
     })
         .then((response) => {
-                if (response.status === 500) {
-                    throw new Error("Сервер сломался");
-                }
+            if (response.status === 500) {
+                throw new Error("Сервер сломался");
+            }
 
-                if (response.status === 400) {
-                    throw new Error("Плохой запрос");
-                }
+            if (response.status === 400) {
+                throw new Error("Плохой запрос");
+            }
 
-                return response.json()
-            })
-    .then(() => {
-        return fetchAndRenderComments().then(() => {
-            addComment.style.display = 'none';
-            formElement.style.display = 'block';
-            nameInputElement.value = '';
-            textAreaElement.value = '';
+            return response.json()
         })
-    })
-    .catch((error) => {
-        formElement.style.display = 'block';
-        addComment.style.display = 'none';
+        .then(() => {
+            return fetchAndRenderComments().then(() => {
+                addComment.style.display = 'none';
+                formElement.style.display = 'block';
+                nameInputElement.value = '';
+                textAreaElement.value = '';
+            })
+        })
+        .catch((error) => {
+            formElement.style.display = 'block';
+            addComment.style.display = 'none';
 
-        if (error.message === "Сервер сломался") {
-            handlePostClick();
-            return;
-        }
-        if (error.message === "Плохой запрос") {
-            alert("Имя и комментарий должны быть не короче 3 символов");
-            return;
-        }
-        alert('Кажется, у вас отсутствует интернет');
-        console.log(error);
-    })
+            if (error.message === "Сервер сломался") {
+                handlePostClick();
+                return;
+            }
+            if (error.message === "Плохой запрос") {
+                alert("Имя и комментарий должны быть не короче 3 символов");
+                return;
+            }
+            alert('Кажется, у вас отсутствует интернет');
+            console.log(error);
+        })
 }
