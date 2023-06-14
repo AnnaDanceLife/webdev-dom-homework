@@ -2,15 +2,14 @@ import { comments } from "./api.js";
 import { initReplyToCommentListeners } from "./main.js";
 import { initEditCommentListeners } from "./main.js";
 import { initCountLikesListeners } from "./main.js";
-const commentsElement = document.getElementById('comments');
-
+import { handlePostClick } from "./api.js";
 
 export const renderComments = () => {
   const appEl = document.getElementById('app');
 
-    const commentsHtml = comments.
-        map((comment, index) => {
-            return `<li class="comment" data-index="${index}">
+  const commentsHtml = comments.
+    map((comment, index) => {
+      return `<li class="comment" data-index="${index}">
         <div class="comment-header">
           <div>
             ${comment.author}
@@ -21,11 +20,11 @@ export const renderComments = () => {
         </div>
         <div class="comment-body">
             ${comment.isEdit
-                    ? `<textarea type="textarea" data-index=${index} class="textarea-text" rows="4">${comment.text}</textarea>`
-                    : `<div class="comment-text" data-index="${index}">
+          ? `<textarea type="textarea" data-index=${index} class="textarea-text" rows="4">${comment.text}</textarea>`
+          : `<div class="comment-text" data-index="${index}">
               ${comment.text}
             </div>`
-                }
+        }
         </div>
         <div class="comment-footer">
           <div>
@@ -40,11 +39,11 @@ export const renderComments = () => {
           </div>
         </div>
       </li>`;
-        })
-        .join('');
+    })
+    .join('');
 
 
-    const appHtml =`<div class="container">
+  const appHtml = `<div class="container">
     <div class="container">
       <div class="add-form">
           <h3 class="title">Форма входа</h3>
@@ -73,7 +72,71 @@ export const renderComments = () => {
   </div>`
   appEl.innerHTML = appHtml;
 
-    initCountLikesListeners();
-    initEditCommentListeners();
-    initReplyToCommentListeners();
+  const buttonElement = document.getElementById('add-form-button');
+  const nameInputElement = document.getElementById('add-form-name');
+  const textAreaElement = document.getElementById('add-form-text');
+  const formElement = document.getElementById('form');
+  const addComment = document.querySelector('.add-comment');
+
+  buttonElement.addEventListener('click', () => {
+
+    nameInputElement.classList.remove('error');
+    textAreaElement.classList.remove('error');
+
+    if (nameInputElement.value.trim() === '') {
+      return nameInputElement.classList.add('error');
+    } else if (textAreaElement.value.trim() === '') {
+      return textAreaElement.classList.add('error');
+    }
+
+    formElement.style.display = 'none';
+    addComment.style.display = 'block';
+    handlePostClick();
+  });
+
+  // Выключение кнопки при пустом поле ввода
+
+function onblur(e) {
+  if (nameInputElement.value === '' || textAreaElement.value === '') {
+      buttonElement.disabled = true;
+      buttonElement.classList.add('button-no-active');
+  } else {
+      buttonElement.disabled = false;
+      buttonElement.classList.remove('button-no-active');
+  }
+};
+
+  nameInputElement.addEventListener('input', onblur);
+  textAreaElement.addEventListener('input', onblur);
+
+  // Добавление элемента в список по нажатию Enter 
+
+  // formElement.addEventListener('keyup', function (event) {
+
+  //   if (event.keyCode === 13) {
+  //     fetchAndRenderComments();
+  //     nameInputElement.value = '';
+  //     textAreaElement.value = '';
+  //   }
+
+  //   renderComments();
+  // });
+
+  // Удаление последнего элемента
+
+  const buttonDelElement = document.getElementById('button-del');
+
+  buttonDelElement.addEventListener('click', () => {
+    const commentsElement = document.getElementById('comments');
+
+    const index = commentsElement.dataset.index;
+    const comment = comments[index];
+    comments.pop();
+    renderComments();
+  });
+
+
+  initCountLikesListeners();
+  initEditCommentListeners();
+  initReplyToCommentListeners();
 };

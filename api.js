@@ -1,7 +1,3 @@
-const nameInputElement = document.getElementById('add-form-name');
-const textAreaElement = document.getElementById('add-form-text');
-const formElement = document.getElementById('form');
-const addComment = document.querySelector('.add-comment');
 const commentsElement = document.getElementById('comments');
 
 import { renderComments } from "./render.js";
@@ -19,6 +15,9 @@ export const fetchAndRenderComments = () => {
         }
     })
         .then((response) => {
+            // commentsElement.disabled = true;
+            // commentsElement.textContent = 'Комментарии загружаются';
+
 
             if (response.status === 401) {
                 throw new Error("Нет авторизации");
@@ -31,8 +30,8 @@ export const fetchAndRenderComments = () => {
             return response.json()
         })
         .then((responseData) => {
-            commentsElement.disabled = true;
-            commentsElement.textContent = comments;
+            // commentsElement.disabled = true;
+            // commentsElement.textContent = comments;
             const appComments = responseData.comments.map((comment) => {
                 return {
                     author: comment.author.name,
@@ -54,6 +53,11 @@ export const fetchAndRenderComments = () => {
 }
 
 export const handlePostClick = () => {
+    const nameInputElement = document.getElementById('add-form-name');
+    const textAreaElement = document.getElementById('add-form-text');
+    const formElement = document.getElementById('form');
+    const addComment = document.querySelector('.add-comment');
+    
     fetch(host, {
         method: "POST",
         body: JSON.stringify({

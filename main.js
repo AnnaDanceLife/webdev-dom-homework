@@ -1,18 +1,10 @@
 'use strict';
-const buttonElement = document.getElementById('add-form-button');
-const nameInputElement = document.getElementById('add-form-name');
-const textAreaElement = document.getElementById('add-form-text');
-const formElement = document.getElementById('form');
-const addComment = document.querySelector('.add-comment');
-const commentsElement = document.getElementById('comments');
 
 import { comments } from "./api.js";
 import { renderComments } from "./render.js";
 
-commentsElement.disabled = true;
-commentsElement.textContent = 'Комментарии загружаются';
 
-import { fetchAndRenderComments, handlePostClick } from "./api.js";
+import { fetchAndRenderComments } from "./api.js";
 
 
 export const initCountLikesListeners = () => {
@@ -119,58 +111,7 @@ initCountLikesListeners();
 initEditCommentListeners();
 initReplyToCommentListeners();
 
-buttonElement.addEventListener('click', () => {
-
-    nameInputElement.classList.remove('error');
-    textAreaElement.classList.remove('error');
-
-    if (nameInputElement.value.trim() === '') {
-        return nameInputElement.classList.add('error');
-    } else if (textAreaElement.value.trim() === '') {
-        return textAreaElement.classList.add('error');
-    }
-
-    formElement.style.display = 'none';
-    addComment.style.display = 'block';
-    handlePostClick();
-});
-
-// Выключение кнопки при пустом поле ввода
-
-function onblur(e) {
-    if (nameInputElement.value === '' || textAreaElement.value === '') {
-        buttonElement.disabled = true;
-        buttonElement.classList.add('button-no-active');
-    } else {
-        buttonElement.disabled = false;
-        buttonElement.classList.remove('button-no-active');
-    }
-};
-nameInputElement.addEventListener('input', onblur);
-textAreaElement.addEventListener('input', onblur);
 
 
-// Добавление элемента в список по нажатию Enter 
-
-formElement.addEventListener('keyup', function (event) {
-
-    if (event.keyCode === 13) {
-        fetchAndRenderComments();
-        nameInputElement.value = '';
-        textAreaElement.value = '';
-    }
-
-    renderComments();
-});
 
 
-// Удаление последнего элемента
-
-const buttonDelElement = document.getElementById('button-del');
-
-buttonDelElement.addEventListener('click', () => {
-    const index = commentsElement.dataset.index;
-    const comment = comments[index];
-    comments.pop();
-    renderComments();
-});
