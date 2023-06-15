@@ -1,11 +1,31 @@
-import { comments } from "./api.js";
+import { comments, fetchAndRenderComments } from "./api.js";
 import { initReplyToCommentListeners } from "./main.js";
 import { initEditCommentListeners } from "./main.js";
 import { initCountLikesListeners } from "./main.js";
 import { handlePostClick } from "./api.js";
+import { token } from "./api.js";
+
 
 export const renderApp = () => {
   const appEl = document.getElementById('app');
+
+  if (!token) {
+    const appHtml = `
+      <div class="add-form">
+          <h3 class="title">Форма входа</h3>
+              <input type="text" class="add-form-name add-form-login" placeholder="Введите логин" id="login"/> <br>
+              <input type="password" class="add-form-name" placeholder="Введите пароль" id="password"/>
+          <button id="auth-button" class="auth-button add-form-button">Войти</button>
+          <button id="auth-toggle-button" class="add-form-button auth-button auth-toggle">Зарегистрироваться</button>
+      </div>`
+    appEl.innerHTML = appHtml;
+    const authButton = document.getElementById('auth-button');
+    authButton.addEventListener('click', () => {
+      let token = "Bearer asb4c4boc86gasb4c4boc86g37w3cc3bo3b83k4g37k3bk3cg3c03ck4k";
+      fetchAndRenderComments();
+    })
+    return;
+  }
 
   const commentsHtml = comments.
     map((comment, index) => {
@@ -41,36 +61,23 @@ export const renderApp = () => {
       </li>`;
     })
     .join('');
-
-
-  const appHtml = `<div class="container">
-    <div class="container">
-      <div class="add-form">
-          <h3 class="title">Форма входа</h3>
-              <input type="text" class="add-form-name add-form-login" placeholder="Введите логин" id="login"/>
-              <input type="password" class="add-form-name" placeholder="Введите пароль" id="password"/>
-          <button id="auth-button" class="auth-button add-form-button">Войти</button>
-          <button id="auth-toggle-button" class="add-form-button auth-button auth-toggle">Зарегистрироваться</button>
-      </div>
-   </div>
-   
-    <ul id="comments" class="comments">
-      ${commentsHtml}
-    </ul>
-    <div>
+  appEl.innerHTML = `<div class="container">
+  <ul id="comments" class="comments">
+  ${commentsHtml}
+  </ul>
+  <div>
       <button id="button-del" class="add-form-button">Удалить последний комментарий</button>
-    </div>
-    <div id="form" class="add-form">
+  </div>
+  <div id="form" class="add-form">
       <input id="add-form-name" type="text" class="add-form-name" placeholder="Введите ваше имя" />
       <textarea id="add-form-text" type="textarea" class="add-form-text" placeholder="Введите ваш коментарий"
-        rows="4"></textarea>
-      <div class="add-form-row">
-        <button id="add-form-button" class="add-form-button">Написать</button>
-      </div>
-    </div>
-    <p class="add-comment" style="display: none;">Комментарий добавляется...</p>
-  </div>`
-  appEl.innerHTML = appHtml;
+    rows="4"></textarea>
+  <div class="add-form-row">
+    <button id="add-form-button" class="add-form-button">Написать</button>
+  </div>
+</div>
+<p class="add-comment" style="display: none;">Комментарий добавляется...</p>
+</div>`
 
   const buttonElement = document.getElementById('add-form-button');
   const nameInputElement = document.getElementById('add-form-name');
