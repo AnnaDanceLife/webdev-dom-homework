@@ -19,9 +19,10 @@ export const renderApp = () => {
           <button id="auth-toggle-button" class="add-form-button auth-button auth-toggle">Зарегистрироваться</button>
       </div>`
     appEl.innerHTML = appHtml;
+
     const authButton = document.getElementById('auth-button');
     authButton.addEventListener('click', () => {
-      let token = "Bearer asb4c4boc86gasb4c4boc86g37w3cc3bo3b83k4g37k3bk3cg3c03ck4k";
+       token = "Bearer asb4c4boc86gasb4c4boc86g37w3cc3bo3b83k4g37k3bk3cg3c03ck4k";
       fetchAndRenderComments();
     })
     return;
@@ -61,7 +62,8 @@ export const renderApp = () => {
       </li>`;
     })
     .join('');
-  appEl.innerHTML = `<div class="container">
+
+  const appHtml = `<div class="container">
   <ul id="comments" class="comments">
   ${commentsHtml}
   </ul>
@@ -78,6 +80,8 @@ export const renderApp = () => {
 </div>
 <p class="add-comment" style="display: none;">Комментарий добавляется...</p>
 </div>`
+
+appEl.innerHTML = appHtml;
 
   const buttonElement = document.getElementById('add-form-button');
   const nameInputElement = document.getElementById('add-form-name');
