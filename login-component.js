@@ -20,7 +20,7 @@ export function renderLoginComponent(appEl, commentsHtml) {
               <button id="auth-button" class="auth-button add-form-button">${isLoginMode ? "Войти" : "Зарегистрироваться"}</button>
               <button id="toggle-button" class="add-form-button auth-button auth-toggle">Перейти ${isLoginMode ? "к регистрации" : "ко входу"}</button>
           </div>
-          </div>`
+        </div>`
 
         appEl.innerHTML = appHtml;
 

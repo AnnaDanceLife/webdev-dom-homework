@@ -4,7 +4,7 @@ import { initEditCommentListeners } from "./main.js";
 import { initCountLikesListeners } from "./main.js";
 import { handlePostClick } from "./api.js";
 import { renderLoginComponent } from "./login-component.js";
-
+import { isInitionalLoading } from "./api.js";
 
 export const renderApp = () => {
   const appEl = document.getElementById('app');
@@ -44,31 +44,41 @@ export const renderApp = () => {
     })
     .join('');
 
-  if (!token) {
-    renderLoginComponent(appEl, commentsHtml);
-    return;
-  }
 
   const appHtml = `<div class="container">
   <ul id="comments" class="comments">
-  ${commentsHtml}
+  ${isInitionalLoading ? `<p class="add-comment" >Комментарий добавляется...</p>` : commentsHtml}
   </ul>
-  <div>
+  ${token
+    ? `
+    <div>
       <button id="button-del" class="add-form-button">Удалить последний комментарий</button>
-  </div>
-  <div id="form" class="add-form">
-      <input id="add-form-name" type="text" class="add-form-name" placeholder="Введите ваше имя" />
-      <textarea id="add-form-text" type="textarea" class="add-form-text" placeholder="Введите ваш коментарий"
-    rows="4"></textarea>
-  <div class="add-form-row">
-    <button id="add-form-button" class="add-form-button">Написать</button>
-  </div>
-  </div>
-  <p class="add-comment" style="display: none;">Комментарий добавляется...</p>
+    </div>
+        <div id="form" class="add-form">
+          <input id="add-form-name" type="text" class="add-form-name" />
+          <textarea id="add-form-text" type="textarea" class="add-form-text" placeholder="Введите ваш коментарий"
+          rows="4"></textarea>
+          <div class="add-form-row">
+            <button id="add-form-button" class="add-form-button">Написать</button>
+          </div>
+        </div>`
+    : `
+    <div class="form-loading" style="margin-top: 20px">
+    Чтобы добавить комментарий, <a href='#' id="go-to-login">авторизуйтесь</a>
+    </div>`
+  }
   </div>`
+  // <p class="add-comment" style="display: none;">Комментарий добавляется...</p>
 
   appEl.innerHTML = appHtml;
 
+  if (!token) {
+    document.getElementById('go-to-login').addEventListener('click', (event) => {
+      event.preventDefault();
+      renderLoginComponent(appEl, commentsHtml);
+
+  })
+  }
 
   const buttonElement = document.getElementById('add-form-button');
   const nameInputElement = document.getElementById('add-form-name');

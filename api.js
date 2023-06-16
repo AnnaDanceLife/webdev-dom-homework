@@ -12,7 +12,7 @@ export let token = null;
 function setToken(newToken) {
     token = newToken;
 }
-
+export let isInitionalLoading = true;
 
 export const fetchAndRenderComments = () => {
     return fetch(host, {
@@ -24,6 +24,7 @@ export const fetchAndRenderComments = () => {
         .then((response) => {
             // commentsElement.disabled = true;
             // commentsElement.textContent = 'Комментарии загружаются';
+            isInitionalLoading = true;
 
             if (response.status === 401) {
                 throw new Error("Нет авторизации");
@@ -34,6 +35,8 @@ export const fetchAndRenderComments = () => {
             return response.json()
         })
         .then((responseData) => {
+            isInitionalLoading = false;
+
             // commentsElement.disabled = true;
             // commentsElement.textContent = comments;
             const appComments = responseData.comments.map((comment) => {
