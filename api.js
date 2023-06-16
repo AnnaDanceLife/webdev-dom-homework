@@ -5,6 +5,7 @@ import { fullDate } from "./main.js";
 export let comments = [];
 
 const host = 'https://wedev-api.sky.pro/api/v2/anna-shatilova/comments';
+const loginHost = ' https://wedev-api.sky.pro/api/user/login';
 export let token = null;
 export function setToken(newToken) {
     token = newToken;
@@ -116,4 +117,31 @@ export const handlePostClick = () => {
             alert('Кажется, у вас отсутствует интернет');
             console.log(error);
         })
+}
+
+export const login = () => {
+    return fetch(loginHost, {
+        method: "POST",
+        body: JSON.stringify({
+            login: 'glebka',
+            password: '123456'
+        })
+    })
+            .then((response) => {
+                // if (response.status === 500) {
+                //     throw new Error("Сервер сломался");
+                // }
+
+                // if (response.status === 400) {
+                //     throw new Error("Плохой запрос");
+                // }
+
+                return response.json()
+            })
+            .then((user) => {
+                console.log(user);
+                setToken(`Bearer ${user.user.token}`);
+                fetchAndRenderComments();
+            })
+
 }

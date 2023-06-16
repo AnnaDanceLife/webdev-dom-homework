@@ -1,4 +1,4 @@
-import { comments, fetchAndRenderComments } from "./api.js";
+import { comments, fetchAndRenderComments, login } from "./api.js";
 import { initReplyToCommentListeners } from "./main.js";
 import { initEditCommentListeners } from "./main.js";
 import { initCountLikesListeners } from "./main.js";

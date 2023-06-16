@@ -1,4 +1,6 @@
-export function renderLoginComponent(appEl, commentsHtml, setToken, fetchAndRenderComments) {
+import { login } from "./api.js";
+
+export function renderLoginComponent(appEl, commentsHtml) {
     const appHtml = `
 <div class="container">
 <ul id="comments" class="comments">
@@ -17,7 +19,6 @@ ${commentsHtml}
 
     const authButton = document.getElementById('auth-button');
     authButton.addEventListener('click', () => {
-        setToken("Bearer asb4c4boc86gasb4c4boc86g37w3cc3bo3b83k4g37k3bk3cg3c03ck4k");
-        fetchAndRenderComments();
+        login();
     })
 }
