@@ -2,11 +2,13 @@ const commentsElement = document.getElementById('comments');
 
 import { renderApp } from "./render.js";
 import { fullDate } from "./main.js";
-import { token } from "./render.js";
-
 export let comments = [];
 
 const host = 'https://wedev-api.sky.pro/api/v2/anna-shatilova/comments';
+export let token = null;
+export function setToken(newToken) {
+    token = newToken;
+}
 
 export const fetchAndRenderComments = () => {
     return fetch(host, {

@@ -3,10 +3,7 @@ import { initReplyToCommentListeners } from "./main.js";
 import { initEditCommentListeners } from "./main.js";
 import { initCountLikesListeners } from "./main.js";
 import { handlePostClick } from "./api.js";
-
-export let token = "Bearer asb4c4boc86gasb4c4boc86g37w3cc3bo3b83k4g37k3bk3cg3c03ck4k";
-token = null;
-
+import { setToken, token } from "./api.js";
 
 
 export const renderApp = () => {
@@ -64,33 +61,32 @@ export const renderApp = () => {
 
     const authButton = document.getElementById('auth-button');
     authButton.addEventListener('click', () => {
-       token = "Bearer asb4c4boc86gasb4c4boc86g37w3cc3bo3b83k4g37k3bk3cg3c03ck4k";
+       setToken("Bearer asb4c4boc86gasb4c4boc86g37w3cc3bo3b83k4g37k3bk3cg3c03ck4k");
       fetchAndRenderComments();
     })
     return;
   }
-
+  
   const appHtml = `<div class="container">
-<ul id="comments" class="comments">
-${commentsHtml}
-</ul>
-<div>
-    <button id="button-del" class="add-form-button">Удалить последний комментарий</button>
-</div>
-<div id="form" class="add-form">
-    <input id="add-form-name" type="text" class="add-form-name" placeholder="Введите ваше имя" />
-    <textarea id="add-form-text" type="textarea" class="add-form-text" placeholder="Введите ваш коментарий"
-  rows="4"></textarea>
-<div class="add-form-row">
-  <button id="add-form-button" class="add-form-button">Написать</button>
-</div>
-</div>
-<p class="add-comment" style="display: none;">Комментарий добавляется...</p>
-</div>`
-
-appEl.innerHTML = appHtml;
-
-
+  <ul id="comments" class="comments">
+  ${commentsHtml}
+  </ul>
+  <div>
+      <button id="button-del" class="add-form-button">Удалить последний комментарий</button>
+  </div>
+  <div id="form" class="add-form">
+      <input id="add-form-name" type="text" class="add-form-name" placeholder="Введите ваше имя" />
+      <textarea id="add-form-text" type="textarea" class="add-form-text" placeholder="Введите ваш коментарий"
+    rows="4"></textarea>
+  <div class="add-form-row">
+    <button id="add-form-button" class="add-form-button">Написать</button>
+  </div>
+  </div>
+  <p class="add-comment" style="display: none;">Комментарий добавляется...</p>
+  </div>`
+  
+  appEl.innerHTML = appHtml;
+  
 
   const buttonElement = document.getElementById('add-form-button');
   const nameInputElement = document.getElementById('add-form-name');
