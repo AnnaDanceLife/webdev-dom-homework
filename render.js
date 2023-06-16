@@ -4,14 +4,15 @@ import { initEditCommentListeners } from "./main.js";
 import { initCountLikesListeners } from "./main.js";
 import { handlePostClick } from "./api.js";
 import { setToken, token } from "./api.js";
+import { renderLoginComponent } from "./login-component.js";
 
 
 export const renderApp = () => {
   const appEl = document.getElementById('app');
 
   const commentsHtml = comments.
-  map((comment, index) => {
-    return `<li class="comment" data-index="${index}">
+    map((comment, index) => {
+      return `<li class="comment" data-index="${index}">
       <div class="comment-header">
         <div>
           ${comment.author}
@@ -22,11 +23,11 @@ export const renderApp = () => {
       </div>
       <div class="comment-body">
           ${comment.isEdit
-        ? `<textarea type="textarea" data-index=${index} class="textarea-text" rows="4">${comment.text}</textarea>`
-        : `<div class="comment-text" data-index="${index}">
+          ? `<textarea type="textarea" data-index=${index} class="textarea-text" rows="4">${comment.text}</textarea>`
+          : `<div class="comment-text" data-index="${index}">
             ${comment.text}
           </div>`
-      }
+        }
       </div>
       <div class="comment-footer">
         <div>
@@ -41,32 +42,14 @@ export const renderApp = () => {
         </div>
       </div>
     </li>`;
-  })
-  .join('');
+    })
+    .join('');
 
   if (!token) {
-    const appHtml = `
-    <div class="container">
-  <ul id="comments" class="comments">
-  ${commentsHtml}
-  </ul>
-      <div class="add-form">
-          <h3 class="title">Форма входа</h3>
-              <input type="text" class="add-form-name add-form-login" placeholder="Введите логин" id="login"/> <br>
-              <input type="password" class="add-form-name" placeholder="Введите пароль" id="password"/>
-          <button id="auth-button" class="auth-button add-form-button">Войти</button>
-          <button id="auth-toggle-button" class="add-form-button auth-button auth-toggle">Зарегистрироваться</button>
-      </div>`
-    appEl.innerHTML = appHtml;
-
-    const authButton = document.getElementById('auth-button');
-    authButton.addEventListener('click', () => {
-       setToken("Bearer asb4c4boc86gasb4c4boc86g37w3cc3bo3b83k4g37k3bk3cg3c03ck4k");
-      fetchAndRenderComments();
-    })
+    renderLoginComponent(appEl, commentsHtml, setToken, fetchAndRenderComments);
     return;
   }
-  
+
   const appHtml = `<div class="container">
   <ul id="comments" class="comments">
   ${commentsHtml}
@@ -84,9 +67,9 @@ export const renderApp = () => {
   </div>
   <p class="add-comment" style="display: none;">Комментарий добавляется...</p>
   </div>`
-  
+
   appEl.innerHTML = appHtml;
-  
+
 
   const buttonElement = document.getElementById('add-form-button');
   const nameInputElement = document.getElementById('add-form-name');
