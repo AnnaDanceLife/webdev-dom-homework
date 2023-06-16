@@ -105,8 +105,8 @@ export const fullDate = () => {
     return `${date}.${month}.${year} ${hours}:${minutes}`;
 };
 
-// fetchAndRenderComments();
-renderApp();
+fetchAndRenderComments();
+// renderApp();
 initCountLikesListeners();
 initEditCommentListeners();
 initReplyToCommentListeners();
