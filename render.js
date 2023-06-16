@@ -1,9 +1,8 @@
-import { comments, fetchAndRenderComments, login } from "./api.js";
+import { comments, fetchAndRenderComments, token} from "./api.js";
 import { initReplyToCommentListeners } from "./main.js";
 import { initEditCommentListeners } from "./main.js";
 import { initCountLikesListeners } from "./main.js";
 import { handlePostClick } from "./api.js";
-import { setToken, token } from "./api.js";
 import { renderLoginComponent } from "./login-component.js";
 
 
@@ -46,7 +45,7 @@ export const renderApp = () => {
     .join('');
 
   if (!token) {
-    renderLoginComponent(appEl, commentsHtml, setToken, fetchAndRenderComments);
+    renderLoginComponent(appEl, commentsHtml);
     return;
   }
 

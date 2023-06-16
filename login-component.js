@@ -1,4 +1,4 @@
-import { login } from "./api.js";
+import { loginAuth } from "./api.js";
 
 export function renderLoginComponent(appEl, commentsHtml) {
     const appHtml = `
@@ -19,6 +19,7 @@ ${commentsHtml}
 
     const authButton = document.getElementById('auth-button');
     authButton.addEventListener('click', () => {
-        login();
+
+        loginAuth();
     })
 }

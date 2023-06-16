@@ -7,9 +7,10 @@ export let comments = [];
 const host = 'https://wedev-api.sky.pro/api/v2/anna-shatilova/comments';
 const loginHost = ' https://wedev-api.sky.pro/api/user/login';
 export let token = null;
-export function setToken(newToken) {
+function setToken(newToken) {
     token = newToken;
 }
+
 
 export const fetchAndRenderComments = () => {
     return fetch(host, {
@@ -119,29 +120,45 @@ export const handlePostClick = () => {
         })
 }
 
-export const login = () => {
+export const loginAuth = () => {
+    const login = document.getElementById('login').value;
+    const password = document.getElementById('password').value;
+    if (!login) {
+        alert('Введите логин');
+        return;
+    }
+
+    if (!password) {
+        alert('Введите пароль');
+        return;
+    }
+
     return fetch(loginHost, {
         method: "POST",
         body: JSON.stringify({
-            login: 'glebka',
-            password: '123456'
+            login: login,
+            password: password
         })
     })
-            .then((response) => {
-                // if (response.status === 500) {
-                //     throw new Error("Сервер сломался");
-                // }
+        .then((response) => {
+            // if (response.status === 500) {
+            //     throw new Error("Сервер сломался");
+            // }
 
-                // if (response.status === 400) {
-                //     throw new Error("Плохой запрос");
-                // }
-
-                return response.json()
-            })
-            .then((user) => {
-                console.log(user);
-                setToken(`Bearer ${user.user.token}`);
-                fetchAndRenderComments();
-            })
+            if (response.status === 400) {
+                throw new Error("Неверный логин или пароль");
+            }
+            return response.json()
+        })
+        .then((user) => {
+            setToken(`Bearer ${user.user.token}`);
+            fetchAndRenderComments();
+        })
+        .catch((error) => {
+            if (error.message === "Неверный логин или пароль") {
+                alert("Неверный логин или пароль");
+                return;
+            }
+        })
 
 }
