@@ -1,4 +1,4 @@
-import { loginAuth } from "./api.js";
+import { loginUser, registerUser } from "./api.js";
 
 export function renderLoginComponent(appEl, commentsHtml) {
     let isLoginMode = true;
@@ -26,7 +26,37 @@ export function renderLoginComponent(appEl, commentsHtml) {
 
         const authButton = document.getElementById('auth-button');
         authButton.addEventListener('click', () => {
-            loginAuth();
+            if (isLoginMode) {
+                const login = document.getElementById('login').value;
+                const password = document.getElementById('password').value;
+                if (!login) {
+                    alert('Введите логин');
+                    return;
+                }
+                if (!password) {
+                    alert('Введите пароль');
+                    return;
+                }
+                loginUser(login, password);
+            } else {
+                const name = document.getElementById('name').value;
+                const login = document.getElementById('login').value;
+                const password = document.getElementById('password').value;
+
+                if (!name) {
+                    alert('Введите имя');
+                    return;
+                }
+                if (!login) {
+                    alert('Введите логин');
+                    return;
+                }
+                if (!password) {
+                    alert('Введите пароль');
+                    return;
+                }
+                registerUser(name, login, password);
+            }
         });
 
         document.getElementById('toggle-button').addEventListener('click', () => {
@@ -34,5 +64,5 @@ export function renderLoginComponent(appEl, commentsHtml) {
             renderForm();
         })
     }
- renderForm();
+    renderForm();
 }

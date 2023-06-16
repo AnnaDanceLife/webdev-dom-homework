@@ -6,6 +6,8 @@ export let comments = [];
 
 const host = 'https://wedev-api.sky.pro/api/v2/anna-shatilova/comments';
 const loginHost = ' https://wedev-api.sky.pro/api/user/login';
+const registerHost = 'https://wedev-api.sky.pro/api/user';
+
 export let token = null;
 function setToken(newToken) {
     token = newToken;
@@ -23,15 +25,12 @@ export const fetchAndRenderComments = () => {
             // commentsElement.disabled = true;
             // commentsElement.textContent = 'Комментарии загружаются';
 
-
             if (response.status === 401) {
                 throw new Error("Нет авторизации");
             }
-
             if (response.status === 500) {
                 throw new Error("Сервер сломался");
             }
-
             return response.json()
         })
         .then((responseData) => {
@@ -88,11 +87,9 @@ export const handlePostClick = () => {
             if (response.status === 500) {
                 throw new Error("Сервер сломался");
             }
-
             if (response.status === 400) {
                 throw new Error("Плохой запрос");
             }
-
             return response.json()
         })
         .then(() => {
@@ -120,19 +117,7 @@ export const handlePostClick = () => {
         })
 }
 
-export const loginAuth = () => {
-    const login = document.getElementById('login').value;
-    const password = document.getElementById('password').value;
-    if (!login) {
-        alert('Введите логин');
-        return;
-    }
-
-    if (!password) {
-        alert('Введите пароль');
-        return;
-    }
-
+export const loginUser = (login, password) => {
     return fetch(loginHost, {
         method: "POST",
         body: JSON.stringify({
@@ -141,10 +126,6 @@ export const loginAuth = () => {
         })
     })
         .then((response) => {
-            // if (response.status === 500) {
-            //     throw new Error("Сервер сломался");
-            // }
-
             if (response.status === 400) {
                 throw new Error("Неверный логин или пароль");
             }
@@ -160,5 +141,31 @@ export const loginAuth = () => {
                 return;
             }
         })
+}
 
+export const registerUser = (name, login, password) => {
+    return fetch(registerHost, {
+        method: "POST",
+        body: JSON.stringify({
+            login: login,
+            name: name,
+            password: password
+        })
+    })
+        .then((response) => {
+            if (response.status === 400) {
+                throw new Error("Такой пользователь уже существует");
+            }
+            return response.json()
+        })
+        .then((user) => {
+            setToken(`Bearer ${user.user.token}`);
+            fetchAndRenderComments();
+        })
+        .catch((error) => {
+            if (error.message === "Такой пользователь уже существует") {
+                alert("Такой пользователь уже существует");
+                return;
+            }
+        })
 }
