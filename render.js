@@ -7,6 +7,7 @@ import { renderLoginComponent } from "./login-component.js";
 import { getInitionalLoading } from "./api.js";
 import { setUser } from "./api.js";
 import { getPostComment } from "./api.js";
+// import { deleteLastComment } from "./api.js";
 
 export const renderApp = () => {
   const isInitionalLoading = getInitionalLoading();
@@ -104,7 +105,20 @@ export const renderApp = () => {
 
       handlePostClick();
     });
-  }
+
+    // if (isInitionalLoading = false) {
+    //   document.getElementById('button-del').addEventListener('click', () => {
+    //     const commentsElement = document.getElementById('comments');
+
+    //     const id = commentsElement.dataset.id;
+    //     const comment = comments[id];
+    //     comments.pop();
+
+    //     deleteLastComment(id);
+    //     renderApp();
+    //   });
+
+    }
 }
 
 // Выключение кнопки при пустом поле ввода

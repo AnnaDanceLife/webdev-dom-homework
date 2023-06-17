@@ -100,7 +100,7 @@ renderApp();
         .then(() => {
             isPostComment = false; 
             renderApp();
-            
+
             return fetchAndRenderComments().then(() => {
                 nameInputElement.value = '';
                 textAreaElement.value = '';
@@ -119,6 +119,22 @@ renderApp();
             console.log(error);
         })
 }
+
+// export const deleteLastComment = (id) => {
+//     return fetch(host + id, {
+//         method: "DELETE",
+//         headers: {
+//             Authorization: token,
+//         }
+//     })
+//         .then((response) => {
+//             return response.json()
+//         })
+//         .then(() => {
+//             renderApp();
+//         })
+// }
+
 
 export const loginUser = (login, password) => {
     return fetch(loginHost, {
