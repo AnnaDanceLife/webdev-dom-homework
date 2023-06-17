@@ -1,5 +1,3 @@
-const commentsElement = document.getElementById('comments');
-
 import { renderApp } from "./render.js";
 import { fullDate } from "./main.js";
 export let comments = [];
@@ -13,8 +11,18 @@ function setToken(newToken) {
     token = newToken;
 }
 export let isInitionalLoading = true;
+export const getInitionalLoading = () => isInitionalLoading;
+
+export let isPostComment = true;
+export const getPostComment = () => isPostComment;
+
+
+export let userApi = null;
+export const setUser = () => userApi;
 
 export const fetchAndRenderComments = () => {
+    renderApp();
+
     return fetch(host, {
         method: "GET",
         headers: {
@@ -22,10 +30,6 @@ export const fetchAndRenderComments = () => {
         }
     })
         .then((response) => {
-            // commentsElement.disabled = true;
-            // commentsElement.textContent = 'Комментарии загружаются';
-            isInitionalLoading = true;
-
             if (response.status === 401) {
                 throw new Error("Нет авторизации");
             }
@@ -37,8 +41,6 @@ export const fetchAndRenderComments = () => {
         .then((responseData) => {
             isInitionalLoading = false;
 
-            // commentsElement.disabled = true;
-            // commentsElement.textContent = comments;
             const appComments = responseData.comments.map((comment) => {
                 return {
                     author: comment.author.name,
@@ -49,6 +51,7 @@ export const fetchAndRenderComments = () => {
                 }
             });
             comments = appComments;
+
             renderApp();
         })
         .catch((error) => {
@@ -62,8 +65,7 @@ export const fetchAndRenderComments = () => {
 export const handlePostClick = () => {
     const nameInputElement = document.getElementById('add-form-name');
     const textAreaElement = document.getElementById('add-form-text');
-    const formElement = document.getElementById('form');
-    const addComment = document.querySelector('.add-comment');
+renderApp();
 
     fetch(host, {
         method: "POST",
@@ -96,17 +98,15 @@ export const handlePostClick = () => {
             return response.json()
         })
         .then(() => {
+            isPostComment = false; 
+            renderApp();
+            
             return fetchAndRenderComments().then(() => {
-                addComment.style.display = 'none';
-                formElement.style.display = 'block';
                 nameInputElement.value = '';
                 textAreaElement.value = '';
             })
         })
         .catch((error) => {
-            formElement.style.display = 'block';
-            addComment.style.display = 'none';
-
             if (error.message === "Сервер сломался") {
                 handlePostClick();
                 return;
@@ -135,6 +135,7 @@ export const loginUser = (login, password) => {
             return response.json()
         })
         .then((user) => {
+            userApi = user;
             setToken(`Bearer ${user.user.token}`);
             fetchAndRenderComments();
         })
