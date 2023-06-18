@@ -124,6 +124,18 @@ export const handlePostClick = () => {
         })
 }
 
+export countLikesApi = (id) => {
+    fetch(host + /comments/id/toggle-like, {
+        method: "POST",
+        body: JSON.stringify({
+            id: id
+        }),
+        headers: {
+            Authorization: token,
+        }
+    })
+}
+
 // export const deleteLastComment = (id) => {
 //     return fetch(host + id, {
 //         method: "DELETE",
@@ -135,7 +147,7 @@ export const handlePostClick = () => {
 //             return response.json()
 //         })
 //         .then(() => {
-//             renderApp();
+//             fetchAndRenderComments();
 //         })
 // }
 

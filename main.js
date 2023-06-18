@@ -5,36 +5,6 @@ import { renderApp } from "./render.js";
 import { fetchAndRenderComments } from "./api.js";
 import { commentDate } from "./api.js";
 
-export const initCountLikesListeners = () => {
-    const countLikesElements = document.querySelectorAll('.like-button');
-
-    for (const countLikesElement of countLikesElements) {
-        countLikesElement.addEventListener('click', (event) => {
-            function delay(interval = 300) {
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, interval);
-                });
-            };
-            event.stopPropagation();
-
-            const index = countLikesElement.dataset.index;
-            const comment = comments[index];
-            comment.isLikeLoading = true;
-            renderApp();
-
-            delay(2000).then(() => {
-                comment.likes = comment.isLiked
-                    ? comment.likes - 1
-                    : comment.likes + 1;
-                comment.isLiked = !comment.isLiked;
-                comment.isLikeLoading = false;
-                renderApp();
-            });
-        })
-    };
-};
 
 // Дополнительное задание DOM-2 - работа кнопок "Редактировать комментарий"
 
