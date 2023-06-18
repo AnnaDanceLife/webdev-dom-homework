@@ -2,10 +2,8 @@
 
 import { comments } from "./api.js";
 import { renderApp } from "./render.js";
-
-
 import { fetchAndRenderComments } from "./api.js";
-
+import { commentDate } from "./api.js";
 
 export const initCountLikesListeners = () => {
     const countLikesElements = document.querySelectorAll('.like-button');
@@ -83,9 +81,9 @@ export const initReplyToCommentListeners = () => {
     };
 };
 
-export const fullDate = () => {
+export const fullDate = (commentDate) => {
 
-    let userDate = new Date();
+    let userDate = new Date(commentDate);
 
     let date = userDate.getDate();
     if (date < 10) date = '0' + date;

@@ -20,6 +20,8 @@ export const getPostComment = () => isPostComment;
 export let userApi = null;
 export const setUser = () => userApi;
 
+export let commentDate = null;
+
 export const fetchAndRenderComments = () => {
     renderApp();
 
@@ -40,11 +42,11 @@ export const fetchAndRenderComments = () => {
         })
         .then((responseData) => {
             isInitionalLoading = false;
-
             const appComments = responseData.comments.map((comment) => {
+                commentDate = comment.date;
                 return {
                     author: comment.author.name,
-                    date: fullDate(comment.date),
+                    date: fullDate(commentDate),
                     text: comment.text,
                     likes: comment.likes,
                     isLiked: false,
