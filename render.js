@@ -11,7 +11,7 @@ import { getPostComment } from "./api.js";
 
 export const renderApp = () => {
   const isInitionalLoading = getInitionalLoading();
-  const isPostComment = getPostComment;
+  const isPostComment = getPostComment();
   let userApi = setUser();
   const appEl = document.getElementById('app');
 
@@ -90,7 +90,7 @@ export const renderApp = () => {
 
     })
   }
-  if (token) {
+  if (token && !isPostComment) {
     const buttonElement = document.getElementById('add-form-button');
     const textAreaElement = document.getElementById('add-form-text');
 
@@ -118,7 +118,7 @@ export const renderApp = () => {
     //     renderApp();
     //   });
 
-    }
+  }
 }
 
 // Выключение кнопки при пустом поле ввода

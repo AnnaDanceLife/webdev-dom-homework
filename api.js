@@ -13,7 +13,7 @@ function setToken(newToken) {
 export let isInitionalLoading = true;
 export const getInitionalLoading = () => isInitionalLoading;
 
-export let isPostComment = true;
+export let isPostComment = false;
 export const getPostComment = () => isPostComment;
 
 
@@ -65,7 +65,8 @@ export const fetchAndRenderComments = () => {
 export const handlePostClick = () => {
     const nameInputElement = document.getElementById('add-form-name');
     const textAreaElement = document.getElementById('add-form-text');
-renderApp();
+    isPostComment = true;
+    renderApp();
 
     fetch(host, {
         method: "POST",
@@ -89,6 +90,7 @@ renderApp();
         }
     })
         .then((response) => {
+
             if (response.status === 500) {
                 throw new Error("Сервер сломался");
             }
@@ -98,7 +100,7 @@ renderApp();
             return response.json()
         })
         .then(() => {
-            isPostComment = false; 
+            isPostComment = false;
             renderApp();
 
             return fetchAndRenderComments().then(() => {
