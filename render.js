@@ -1,17 +1,17 @@
 import { comments, token } from "./api.js";
-import { initReplyToCommentListeners } from "./main.js";
-import { initEditCommentListeners } from "./main.js";
 import { handlePostClick } from "./api.js";
 import { renderLoginComponent } from "./login-component.js";
-import { getInitionalLoading } from "./api.js";
+import { getInitionalLoading, getLikeLoading } from "./api.js";
 import { setUser } from "./api.js";
 import { getPostComment } from "./api.js";
-// import { countLikesApi } from "./api.js";
+import { countLikesApi } from "./api.js";
 import { deleteLastComment } from "./api.js";
 
 export const renderApp = () => {
   const isInitionalLoading = getInitionalLoading();
   const isPostComment = getPostComment();
+  const isLikeLoading = getLikeLoading();
+
   let userApi = setUser();
   const appEl = document.getElementById('app');
 
@@ -42,7 +42,7 @@ export const renderApp = () => {
         </div>
         <div class="likes">
           <span class="likes-counter">${comment.likes}</span>
-          <button data-index="${index}" class="like-button ${comment.isLiked ? '-active-like' : ''} ${comment.isLikeLoading ? '-loading-like' : ''}">
+          <button data-id="${comment.id}" class="like-button ${comment.isLiked ? '-active-like' : ''} ${isLikeLoading ? '-loading-like' : ''}">
           </button>
         </div>
       </div>
@@ -106,26 +106,16 @@ export const renderApp = () => {
       handlePostClick();
     });
 
-    // const countLikesElements = document.querySelectorAll('.like-button');
+    const countLikesElements = document.querySelectorAll('.like-button');
 
-    // for (const countLikesElement of countLikesElements) {
-    //   countLikesElement.addEventListener('click', (event) => {
-    //     function delay(interval = 300) {
-    //       return new Promise((resolve) => {
-    //         setTimeout(() => {
-    //           resolve();
-    //         }, interval);
-    //       });
-    //     };
-    //     event.stopPropagation();
+    for (const countLikesElement of countLikesElements) {
+      countLikesElement.addEventListener('click', (event) => {
+        event.stopPropagation();
+        const id = countLikesElement.dataset.id;
 
-    //     const id = countLikesElement.dataset.id;
-    //     const comment = comments[id];
-    //     // comment.isLikeLoading = true;
-    //     // renderApp();
-    //     // countLikesApi(id, isLikeLoading, comment);
-    //   })
-    // };
+        countLikesApi(id);
+      })
+    };
 
     // Выключение кнопки при пустом поле ввода
 
@@ -140,6 +130,18 @@ export const renderApp = () => {
     };
     textAreaElement.addEventListener('input', onblur);
 
+    // Добавление элемента в список по нажатию Enter 
+
+    // buttonElement.addEventListener('keyup', () => {
+
+    //   if (KeyboardEvent.key === 13) {
+    //     fetchAndRenderComments();
+    //     textAreaElement.value = '';
+    //   }
+
+    //   renderApp();
+    // });
+
   };
 
   if (token && !isInitionalLoading) {
@@ -150,34 +152,4 @@ export const renderApp = () => {
     });
 
   }
-
-  // Добавление элемента в список по нажатию Enter 
-
-  // buttonElement.addEventListener('keyup', function (event) {
-
-  //   if (event.keyCode === 13) {
-  //     fetchAndRenderComments();
-  //     textAreaElement.value = '';
-  //   }
-
-  //   renderApp();
-  // });
-
-  // Удаление последнего элемента
-
-  // const buttonDelElement = document.getElementById('button-del');
-
-  // buttonDelElement.addEventListener('click', () => {
-  //   const commentsElement = document.getElementById('comments');
-
-  //   const index = commentsElement.dataset.index;
-  //   const comment = comments[index];
-  //   comments.pop();
-  //   renderApp();
-  // });
-
-
-  // initCountLikesListeners();
-  // initEditCommentListeners();
-  // initReplyToCommentListeners();
 }

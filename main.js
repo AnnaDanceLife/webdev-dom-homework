@@ -74,12 +74,3 @@ export const fullDate = (commentDate) => {
 };
 
 fetchAndRenderComments();
-// renderApp();
-// initCountLikesListeners();
-// initEditCommentListeners();
-// initReplyToCommentListeners();
-
-
-
-
-

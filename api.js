@@ -13,6 +13,10 @@ function setToken(newToken) {
 export let isInitionalLoading = true;
 export const getInitionalLoading = () => isInitionalLoading;
 
+export let isLikeLoading = false;
+export const getLikeLoading = () => isLikeLoading;
+
+
 export let isPostComment = false;
 export const getPostComment = () => isPostComment;
 
@@ -125,32 +129,25 @@ export const handlePostClick = () => {
         })
 }
 
-// export const countLikesApi = (id, isLikeLoading, comment) => {
-//     fetch(host + id / toggle - like, {
-//         method: "POST",
-//         body: JSON.stringify({
-//             id: id
-//         }),
-//         headers: {
-//             Authorization: token,
-//         }
-//     })
-//         .then((response) => {
-//             comment.isLikeLoading = true;
-//             return response.json()
-//         })
-//         .then((responseData) => {
-//             console.log(responseData);
-//             // comment.likes = comment.isLiked
-//             //   ? comment.likes - 1
-//             //   : comment.likes + 1;
-//             // comment.isLiked = !comment.isLiked;
-//             comment.isLikeLoading = false;
-//             renderApp();
-//             return fetchAndRenderComments()
-//         })
-
-// }
+export const countLikesApi = (id) => {
+    isLikeLoading = true;
+    renderApp();
+    fetch(host + "/" + id + "/" + "toggle-like", {
+        method: "POST",
+        headers: {
+            Authorization: token,
+        }
+    })
+        .then((result) => {
+            result.isLiked
+                ? result.likes - 1
+                : result.likes + 1;
+            result.isLiked = !result.isLiked;
+            isLikeLoading = false;
+            renderApp();
+            return fetchAndRenderComments()
+        })
+}
 
 export const deleteLastComment = (id) => {
     return fetch(host + "/" + id, {
