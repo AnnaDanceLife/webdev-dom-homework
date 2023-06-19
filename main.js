@@ -1,50 +1,10 @@
 'use strict';
-const buttonElement = document.getElementById('add-form-button');
-const nameInputElement = document.getElementById('add-form-name');
-const textAreaElement = document.getElementById('add-form-text');
-const formElement = document.getElementById('form');
-const addComment = document.querySelector('.add-comment');
-const commentsElement = document.getElementById('comments');
 
 import { comments } from "./api.js";
-import { renderComments } from "./render.js";
+import { renderApp } from "./render.js";
+import { fetchAndRenderComments } from "./api.js";
+import { commentDate } from "./api.js";
 
-commentsElement.disabled = true;
-commentsElement.textContent = 'Комментарии загружаются';
-
-import { fetchAndRenderComments, handlePostClick } from "./api.js";
-
-
-export const initCountLikesListeners = () => {
-    const countLikesElements = document.querySelectorAll('.like-button');
-
-    for (const countLikesElement of countLikesElements) {
-        countLikesElement.addEventListener('click', (event) => {
-            function delay(interval = 300) {
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, interval);
-                });
-            };
-            event.stopPropagation();
-
-            const index = countLikesElement.dataset.index;
-            const comment = comments[index];
-            comment.isLikeLoading = true;
-            renderComments();
-
-            delay(2000).then(() => {
-                comment.likes = comment.isLiked
-                    ? comment.likes - 1
-                    : comment.likes + 1;
-                comment.isLiked = !comment.isLiked;
-                comment.isLikeLoading = false;
-                renderComments();
-            });
-        })
-    };
-};
 
 // Дополнительное задание DOM-2 - работа кнопок "Редактировать комментарий"
 
@@ -68,7 +28,7 @@ export const initEditCommentListeners = () => {
             comment.isEdit = !comment.isEdit;
             comments[index].isEdit = comment.isEdit;
 
-            renderComments();
+            renderApp();
         });
     }
 };
@@ -91,9 +51,9 @@ export const initReplyToCommentListeners = () => {
     };
 };
 
-export const fullDate = () => {
+export const fullDate = (commentDate) => {
 
-    let userDate = new Date();
+    let userDate = new Date(commentDate);
 
     let date = userDate.getDate();
     if (date < 10) date = '0' + date;
@@ -113,64 +73,4 @@ export const fullDate = () => {
     return `${date}.${month}.${year} ${hours}:${minutes}`;
 };
 
-// renderComments();
 fetchAndRenderComments();
-initCountLikesListeners();
-initEditCommentListeners();
-initReplyToCommentListeners();
-
-buttonElement.addEventListener('click', () => {
-
-    nameInputElement.classList.remove('error');
-    textAreaElement.classList.remove('error');
-
-    if (nameInputElement.value.trim() === '') {
-        return nameInputElement.classList.add('error');
-    } else if (textAreaElement.value.trim() === '') {
-        return textAreaElement.classList.add('error');
-    }
-
-    formElement.style.display = 'none';
-    addComment.style.display = 'block';
-    handlePostClick();
-});
-
-// Выключение кнопки при пустом поле ввода
-
-function onblur(e) {
-    if (nameInputElement.value === '' || textAreaElement.value === '') {
-        buttonElement.disabled = true;
-        buttonElement.classList.add('button-no-active');
-    } else {
-        buttonElement.disabled = false;
-        buttonElement.classList.remove('button-no-active');
-    }
-};
-nameInputElement.addEventListener('input', onblur);
-textAreaElement.addEventListener('input', onblur);
-
-
-// Добавление элемента в список по нажатию Enter 
-
-formElement.addEventListener('keyup', function (event) {
-
-    if (event.keyCode === 13) {
-        fetchAndRenderComments();
-        nameInputElement.value = '';
-        textAreaElement.value = '';
-    }
-
-    renderComments();
-});
-
-
-// Удаление последнего элемента
-
-const buttonDelElement = document.getElementById('button-del');
-
-buttonDelElement.addEventListener('click', () => {
-    const index = commentsElement.dataset.index;
-    const comment = comments[index];
-    comments.pop();
-    renderComments();
-});
