@@ -50,6 +50,7 @@ export const fetchAndRenderComments = () => {
                     text: comment.text,
                     likes: comment.likes,
                     isLiked: false,
+                    id: comment.id
                 }
             });
             comments = appComments;
@@ -124,32 +125,44 @@ export const handlePostClick = () => {
         })
 }
 
-export countLikesApi = (id) => {
-    fetch(host + /comments/id/toggle-like, {
-        method: "POST",
-        body: JSON.stringify({
-            id: id
-        }),
-        headers: {
-            Authorization: token,
-        }
-    })
-}
-
-// export const deleteLastComment = (id) => {
-//     return fetch(host + id, {
-//         method: "DELETE",
+// export const countLikesApi = (id, isLikeLoading, comment) => {
+//     fetch(host + id / toggle - like, {
+//         method: "POST",
+//         body: JSON.stringify({
+//             id: id
+//         }),
 //         headers: {
 //             Authorization: token,
 //         }
 //     })
 //         .then((response) => {
+//             comment.isLikeLoading = true;
 //             return response.json()
 //         })
-//         .then(() => {
-//             fetchAndRenderComments();
+//         .then((responseData) => {
+//             console.log(responseData);
+//             // comment.likes = comment.isLiked
+//             //   ? comment.likes - 1
+//             //   : comment.likes + 1;
+//             // comment.isLiked = !comment.isLiked;
+//             comment.isLikeLoading = false;
+//             renderApp();
+//             return fetchAndRenderComments()
 //         })
+
 // }
+
+export const deleteLastComment = (id) => {
+    return fetch(host + "/" + id, {
+        method: "DELETE",
+        headers: {
+            Authorization: token,
+        }
+    })
+        .then(() => {
+            return fetchAndRenderComments();
+        })
+}
 
 
 export const loginUser = (login, password) => {

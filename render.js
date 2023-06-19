@@ -6,8 +6,8 @@ import { renderLoginComponent } from "./login-component.js";
 import { getInitionalLoading } from "./api.js";
 import { setUser } from "./api.js";
 import { getPostComment } from "./api.js";
-import { countLikesApi } from "./api.js";
-// import { deleteLastComment } from "./api.js";
+// import { countLikesApi } from "./api.js";
+import { deleteLastComment } from "./api.js";
 
 export const renderApp = () => {
   const isInitionalLoading = getInitionalLoading();
@@ -42,7 +42,7 @@ export const renderApp = () => {
         </div>
         <div class="likes">
           <span class="likes-counter">${comment.likes}</span>
-          <button data-id="${id}" class="like-button ${comment.isLiked ? '-active-like' : ''} ${comment.isLikeLoading ? '-loading-like' : ''}">
+          <button data-index="${index}" class="like-button ${comment.isLiked ? '-active-like' : ''} ${comment.isLikeLoading ? '-loading-like' : ''}">
           </button>
         </div>
       </div>
@@ -106,98 +106,78 @@ export const renderApp = () => {
       handlePostClick();
     });
 
-    const countLikesElements = document.querySelectorAll('.like-button');
+    // const countLikesElements = document.querySelectorAll('.like-button');
 
-    for (const countLikesElement of countLikesElements) {
-      countLikesElement.addEventListener('click', (event) => {
-        function delay(interval = 300) {
-          return new Promise((resolve) => {
-            setTimeout(() => {
-              resolve();
-            }, interval);
-          });
-        };
-        event.stopPropagation();
+    // for (const countLikesElement of countLikesElements) {
+    //   countLikesElement.addEventListener('click', (event) => {
+    //     function delay(interval = 300) {
+    //       return new Promise((resolve) => {
+    //         setTimeout(() => {
+    //           resolve();
+    //         }, interval);
+    //       });
+    //     };
+    //     event.stopPropagation();
 
-        const id = countLikesElement.dataset.id;
-        const comment = comments[id];
-        // comment.isLikeLoading = true;
-        // renderApp();
-        countLikesApi(id)
-          .then((response) => {
-            comment.isLikeLoading = true;
-            return response.json()
-          })
-          .then(() => {
-            comment.likes = comment.isLiked
-              ? comment.likes - 1
-              : comment.likes + 1;
-            comment.isLiked = !comment.isLiked;
-            comment.isLikeLoading = false;
-            renderApp();
-            return fetchAndRenderComments()
-          })
-      })
+    //     const id = countLikesElement.dataset.id;
+    //     const comment = comments[id];
+    //     // comment.isLikeLoading = true;
+    //     // renderApp();
+    //     // countLikesApi(id, isLikeLoading, comment);
+    //   })
+    // };
+
+    // Выключение кнопки при пустом поле ввода
+
+    function onblur() {
+      if (textAreaElement.value === '') {
+        buttonElement.disabled = true;
+        buttonElement.classList.add('button-no-active');
+      } else {
+        buttonElement.disabled = false;
+        buttonElement.classList.remove('button-no-active');
+      }
     };
+    textAreaElement.addEventListener('input', onblur);
+
   };
 
+  if (token && !isInitionalLoading) {
+    document.getElementById('button-del').addEventListener('click', () => {
+      const id = comments[comments.length - 1].id;
 
-  // Выключение кнопки при пустом поле ввода
+      deleteLastComment(id);
+    });
 
-  function onblur() {
-    if (textAreaElement.value === '') {
-      buttonElement.disabled = true;
-      buttonElement.classList.add('button-no-active');
-    } else {
-      buttonElement.disabled = false;
-      buttonElement.classList.remove('button-no-active');
-    }
-  };
-  textAreaElement.addEventListener('input', onblur);
+  }
+
+  // Добавление элемента в список по нажатию Enter 
+
+  // buttonElement.addEventListener('keyup', function (event) {
+
+  //   if (event.keyCode === 13) {
+  //     fetchAndRenderComments();
+  //     textAreaElement.value = '';
+  //   }
+
+  //   renderApp();
+  // });
+
+  // Удаление последнего элемента
+
+  // const buttonDelElement = document.getElementById('button-del');
+
+  // buttonDelElement.addEventListener('click', () => {
+  //   const commentsElement = document.getElementById('comments');
+
+  //   const index = commentsElement.dataset.index;
+  //   const comment = comments[index];
+  //   comments.pop();
+  //   renderApp();
+  // });
 
 
-  // if (isInitionalLoading = false) {
-  //   document.getElementById('button-del').addEventListener('click', () => {
-  //     const commentsElement = document.getElementById('comments');
-
-  //     const id = commentsElement.dataset.id;
-  //     const comment = comments[id];
-  //     comments.pop();
-
-  //     deleteLastComment(id);
-  //     renderApp();
-  //   });
-
+  // initCountLikesListeners();
+  // initEditCommentListeners();
+  // initReplyToCommentListeners();
 }
-}
-
-    // Добавление элемента в список по нажатию Enter 
-
-// buttonElement.addEventListener('keyup', function (event) {
-
-//   if (event.keyCode === 13) {
-//     fetchAndRenderComments();
-//     textAreaElement.value = '';
-//   }
-
-//   renderApp();
-// });
-
-// Удаление последнего элемента
-
-// const buttonDelElement = document.getElementById('button-del');
-
-// buttonDelElement.addEventListener('click', () => {
-//   const commentsElement = document.getElementById('comments');
-
-//   const index = commentsElement.dataset.index;
-//   const comment = comments[index];
-//   comments.pop();
-//   renderApp();
-// });
-
-
-// initCountLikesListeners();
-// initEditCommentListeners();
-// initReplyToCommentListeners();
-// };
