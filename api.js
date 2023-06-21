@@ -1,5 +1,5 @@
 import { renderApp } from "./render.js";
-import { fullDate } from "./main.js";
+import { fullDate } from "./index.js";
 export let comments = [];
 
 const host = 'https://wedev-api.sky.pro/api/v2/anna-shatilova/comments';

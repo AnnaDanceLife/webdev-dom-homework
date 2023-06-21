@@ -4,6 +4,7 @@ import { comments } from "./api.js";
 import { renderApp } from "./render.js";
 import { fetchAndRenderComments } from "./api.js";
 import { commentDate } from "./api.js";
+import { format } from "date-fns";
 
 
 // Дополнительное задание DOM-2 - работа кнопок "Редактировать комментарий"
