@@ -1,5 +1,7 @@
 import { renderApp } from "./render.js";
-import { fullDate } from "./index.js";
+// import { fullDate } from "./index.js";
+import { format } from "date-fns";
+
 export let comments = [];
 
 const host = 'https://wedev-api.sky.pro/api/v2/anna-shatilova/comments';
@@ -24,7 +26,7 @@ export const getPostComment = () => isPostComment;
 export let userApi = null;
 export const setUser = () => userApi;
 
-export let commentDate = null;
+// let commentDate = null;
 
 export const fetchAndRenderComments = () => {
     renderApp();
@@ -47,10 +49,11 @@ export const fetchAndRenderComments = () => {
         .then((responseData) => {
             isInitionalLoading = false;
             const appComments = responseData.comments.map((comment) => {
-                commentDate = comment.date;
+                const createDate = format(new Date(comment.date), 'YYYY-MM-DD hh.mm.ss');
+                // commentDate = comment.date;
                 return {
                     author: comment.author.name,
-                    date: fullDate(commentDate),
+                    date: createDate,
                     text: comment.text,
                     likes: comment.likes,
                     isLiked: false,
