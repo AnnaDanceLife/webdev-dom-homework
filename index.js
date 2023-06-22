@@ -3,7 +3,7 @@
 import { comments } from "./api.js";
 import { renderApp } from "./render.js";
 import { fetchAndRenderComments } from "./api.js";
-import { commentDate } from "./api.js";
+// import { commentDate } from "./api.js";
 
 
 // Дополнительное задание DOM-2 - работа кнопок "Редактировать комментарий"
@@ -43,34 +43,31 @@ export const initReplyToCommentListeners = () => {
             const index = replyToCommentElement.dataset.index;
             const comment = comments[index];
 
-            // Строка кода к основному заданию по DOM -3
-            // textAreaElement.value = comment.author +"\r\n" + comment.text;
-
             textAreaElement.value = `QUOTE_BEGIN ${comment.author + ':' + "\r\n" + comment.text} QUOTE_END`;
         });
     };
 };
 
-export const fullDate = (commentDate) => {
+// export const fullDate = (commentDate) => {
 
-    let userDate = new Date(commentDate);
+//     let userDate = new Date(commentDate);
 
-    let date = userDate.getDate();
-    if (date < 10) date = '0' + date;
+//     let date = userDate.getDate();
+//     if (date < 10) date = '0' + date;
 
-    let month = userDate.getMonth() + 1;
-    if (month < 10) month = '0' + month;
+//     let month = userDate.getMonth() + 1;
+//     if (month < 10) month = '0' + month;
 
-    let year = userDate.getFullYear() % 100;
-    if (year < 10) year = '0' + year;
+//     let year = userDate.getFullYear() % 100;
+//     if (year < 10) year = '0' + year;
 
-    let hours = userDate.getHours();
-    if (hours < 10) hours = '0' + hours;
+//     let hours = userDate.getHours();
+//     if (hours < 10) hours = '0' + hours;
 
-    let minutes = userDate.getMinutes();
-    if (minutes < 10) minutes = '0' + minutes;
+//     let minutes = userDate.getMinutes();
+//     if (minutes < 10) minutes = '0' + minutes;
 
-    return `${date}.${month}.${year} ${hours}:${minutes}`;
-};
+//     return `${date}.${month}.${year} ${hours}:${minutes}`;
+// };
 
 fetchAndRenderComments();
