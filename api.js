@@ -49,11 +49,11 @@ export const fetchAndRenderComments = () => {
         .then((responseData) => {
             isInitionalLoading = false;
             const appComments = responseData.comments.map((comment) => {
-                const createDate = format(new Date(comment.date), 'YYYY-MM-DD hh.mm.ss');
+                // const createDate = format(new Date(comment.date), 'YYYY-MM-DD hh.mm.ss');
                 // commentDate = comment.date;
                 return {
                     author: comment.author.name,
-                    date: createDate,
+                    date: format(new Date(comment.date), 'yyyy-MM-dd hh.mm.ss'),
                     text: comment.text,
                     likes: comment.likes,
                     isLiked: false,
@@ -65,6 +65,8 @@ export const fetchAndRenderComments = () => {
             renderApp();
         })
         .catch((error) => {
+            console.error(error);
+
             if (error.message === "Сервер сломался") {
                 alert("Кажется, у вас сломался интернет, попробуйте позже");
                 return;

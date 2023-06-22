@@ -43,9 +43,6 @@ export const initReplyToCommentListeners = () => {
             const index = replyToCommentElement.dataset.index;
             const comment = comments[index];
 
-            // Строка кода к основному заданию по DOM -3
-            // textAreaElement.value = comment.author +"\r\n" + comment.text;
-
             textAreaElement.value = `QUOTE_BEGIN ${comment.author + ':' + "\r\n" + comment.text} QUOTE_END`;
         });
     };
