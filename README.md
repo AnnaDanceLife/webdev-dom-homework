@@ -8,4 +8,5 @@ https://glebkaf.github.io/webdev-dom-homework/
 
 Открой index.html в браузере
 
-Ссылка на сайт https://annadancelife.github.io/webdev-dom-homework/
+Ссылка на сайт 
+https://anna-shatilova.github.io/webdev-dom-homework/
