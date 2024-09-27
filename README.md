@@ -1,3 +1,3 @@
 # Проект "Комментарии"
-Деплой проекта о ссылке
+Деплой проекта по ссылке
 https://anna-shatilova.github.io/webdev-dom-homework/
